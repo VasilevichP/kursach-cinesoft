@@ -1,0 +1,212 @@
+body {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-image: linear-gradient(120deg,
+    hsl(268, 100%, 27%),
+    hsl(276, 98%, 35%),
+    hsl(289, 89%, 39%),
+    hsl(286, 95%, 75%));
+}
+
+h2 {
+    font-family: sans-serif;
+    font-size: 15em;
+    text-transform: uppercase;
+    color: #000000;
+}
+
+h1 {
+    font-family: sans-serif;
+    /*font-size: xxx-large;*/
+    text-transform: uppercase;
+    /*color: aliceblue;*/
+    /*font-weight: lighter;*/
+}
+
+
+p {
+    font-family: sans-serif;
+}
+
+.snackbar {
+    visibility: hidden;
+    min-width: 250px;
+    margin-left: -125px;
+
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    left: 50%;
+    bottom: 30px;
+    font-size: 17px;
+}
+
+.success {
+    background-color: #4caf50;
+}
+
+.error {
+    background-color: #ff3131;
+}
+
+.snackbar.show {
+    visibility: visible;
+    -webkit-animation: fadein 0.5s, fadeout 0.5s 1.5s;
+    animation: fadein 0.5s, fadeout 0.5s 1.5s;
+}
+
+.snackbar.sshow {
+    visibility: visible;
+    -webkit-animation: fadein 0.4s, fadeout 0.4s 0.7s;
+    animation: fadein 0.4s, fadeout 0.4s 0.7s;
+}
+
+@-webkit-keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    from {
+        bottom: 0;
+        opacity: 0;
+    }
+    to {
+        bottom: 30px;
+        opacity: 1;
+    }
+}
+
+@-webkit-keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+
+@keyframes fadeout {
+    from {
+        bottom: 30px;
+        opacity: 1;
+    }
+    to {
+        bottom: 0;
+        opacity: 0;
+    }
+}
+.scroll-table-body {
+    height: 200px;
+    overflow-x: auto;
+    margin-top: 0px;
+    margin-bottom: 20px;
+    background: white;
+    border-bottom: 1px solid #000000;
+}
+.scroll-table table {
+    width:100%;
+    table-layout: fixed;
+    border: none;
+}
+.scroll-table thead th {
+    font-weight: bold;
+    font-size: 14px;
+    background-color: black;
+    font-size: medium;
+    color: white;
+    padding: 7px 7px;
+}
+.scroll-table tbody td {
+    border-left: 1px solid #000000;
+    border-right: 1px solid #000000;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
+    text-align: center;
+}
+
+.scrolling-wrapper {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    background: black;
+    padding: 1px;
+    scrollbar-width: none;
+
+    .card {
+        display: inline-block;
+        padding:2px 2px 0 2px;
+        text-align: center;
+        margin-top: -1em;
+    }
+}
+
+.rectangle {
+    display:flex;flex-direction: row;width:100%;justify-content: normal;
+    width: 90em;
+    height: 50px;
+    border: 1px solid #000000;
+}
+.rectangle-hidden{
+    display:flex;flex-direction: row;width:100%;justify-content: normal;
+    width: 90em;
+    height: 10px;
+}
+.rectangle-object{
+    height: 50px;
+    color: black;
+}
+.rectangle-text{
+    height: 10px;
+    color: black;
+    font-size: math;
+}
+.dropobject{
+
+}
+.droptarget{
+
+}
+[data-tooltip] {
+    position: relative;
+}
+[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    width: 300px;
+    left: 0; top: 0;
+    background: #fffeff;
+    color: #4f4f4f;
+    padding: 0.2em;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    opacity: 0;
+    transition: 1s;
+}
+[data-tooltip]:hover::after {
+    opacity: 1;
+    top: 2em;
+}
+#floatTip {
+    position: absolute;
+    width: 250px; display: none;
+    border: 1px solid #000; padding: 4px;
+    font-family: sans-serif; font-size: 9pt;
+    color: #444444; background: #ffffff;
+}

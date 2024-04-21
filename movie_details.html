@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body style="background-image: linear-gradient(120deg, #8688ee, #e4ffb4)">
+<div class="container w3-black w3-padding" style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
+    <div class="w3-bar">
+        <a href="mainpage" class="w3-bar-item">
+            <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75">
+        </a>
+        <a href="authorization" class="w3-bar-item w3-right btn w3-hover-text-grey">
+            <h3 style="margin-right: 2em; margin-top: 0.9em">Выйти</h3>
+        </a>
+    </div>
+</div>
+<div class="container" style="margin-top: 8.5em"></div>
+<div class="w3-container w3-white w3-round-large w3-padding"
+     style="width: 85%;align-self: center;margin: auto">
+    <div class="w3-bar w3-center" style="width: 94%;margin: auto">
+        <a href="toFilms" class="w3-bar-item w3-left" style="vertical-align: baseline">
+            <img th:src="@{/images/back.png}" alt="logo" th:width="70" th:height="45"style="margin-top: 1em">
+        </a>
+        <h1 th:text="${movie.getName()}" class="w3-bar-item w3-centered" style="font-weight: bold"/>
+    </div>
+    <div class="w3-bar w3-center">
+    <div class="w3-col s5 w3-center"><img th:src="@{${movie.getPoster()}}" alt="poster"
+                                          onerror="this.src='/images/noimg.png'" th:width="400" class="w3-bordered"
+                                          style="border: black;margin-top: 1em"
+                                          th:height="500"></div>
+    <div class="w3-col s7 w3-left-align" style="align-content: flex-start">
+
+        <p th:text="'Продолжительность фильма: '+${movie.getMovieLength()}+' минут'"></p>
+        <p th:text="'Жанр: ' + ${genres}"></p>
+        <p th:text="'Возрастное ограничение: '+${movie.getAgeRating()}+'+'"></p>
+        <p th:text="'Разрешение фильма: '+${movie.getPermission()}+'D'"></p>
+        <p th:text="'Дата возврата: '+${movie.getDate_of_return()}"></p>
+        <textarea th:text="${movie.getShortDescription()}" rows="9" readonly wrap="hard"
+                  style="width: 95%;border: none;resize: none;outline: none"/>
+    </div></div>
+    <div type="container" style="width: 95%;">
+        <a th:href="'/movie_details/delete/'+${movie.getId()}"
+           class="btn btn-warning w3-round-large w3-hover-white w3-hover-text-black w3-right w3-border-black w3-hover-border-black" onclick="return confirm('Вы точно хотите удалить этот фильм из базы данных?')"
+           style="vertical-align:bottom;text-decoration:none;background-color: black;text-align: center;color: white; height: 2.5em;width: 15%;margin-bottom: 2em">
+            <p style="margin-top: 5%">Удалить</p></a>
+    </div>
+</div>
+<div class="container" style="margin-top: 2em"></div>
+</body>
+</html>

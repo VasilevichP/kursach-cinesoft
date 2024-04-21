@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body style="background-image: linear-gradient(120deg, #caa4e3, #f5ebb4);">
+<div class="container w3-black w3-padding" style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
+    <div class="w3-bar">
+        <a href="mainpage" class="w3-bar-item">
+            <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75">
+        </a>
+        <a href="authorization" class="w3-bar-item w3-right btn w3-hover-text-grey">
+            <h3 style="margin-right: 2em; margin-top: 0.9em">Выйти</h3>
+        </a>
+    </div>
+</div>
+<div class="container" style="margin-top: 9em"></div>
+<form action="/schedule/filter" method="post"
+      style="display:flex;flex-direction: row;width:95%;justify-content: left;margin: auto">
+    <select name="dateFiltBox" id="dateFiltBox"
+            style="background-color: black;text-align: center;color: white;border: transparent 2px;margin-right: 0.4em;cursor:pointer; height: 2.5em;width: 15%">
+        <span th:if="${dateFilt==null}">
+            <option th:text="'Все дни'" value="" selected></option></span>
+        <span th:unless="${dateFilt==null}">
+            <option th:text="'Все дни:'" value=""></option></span>
+            <div th:each="date:${allDates}">
+                <span th:if="${dateFilt==null}">
+                    <option th:value="${date}"
+                            th:text="${date}"></option>
+                </span>
+                <span th:if="${dateFilt!=null}">
+                    <span th:if="${dateFilt.equals(date.toString())}">
+                        <option th:value="${date}" th:text="${date}"
+                                selected></option></span>
+                    <span th:unless="${dateFilt.equals(date.toString())}">
+                        <option th:value="${date}"
+                                th:text="${date}"></option></span>
+                </span>
+            </div>
+    </select>
+    <select name="hallFiltBox" id="hallFiltBox"
+            style="background-color: black;text-align: center;color: white;border: transparent 2px;margin-right: 0.4em;cursor:pointer; height: 2.5em;width: 15%">
+        <span th:if="${hallFilt==null}">
+            <option th:text="'Все залы'" value="" selected></option></span>
+        <span th:unless="${hallFilt==null}">
+            <option th:text="'Все залы:'" value=""></option></span>
+        <div th:each="hall:${allHalls}">
+                <span th:if="${hallFilt==null}">
+                    <option th:value="${hall.getId()}"
+                            th:text="'№ '+${hall.getId()}"></option>
+                </span>
+            <span th:if="${hallFilt!=null}">
+                    <span th:if="${hallFilt.equals(hall.getId().toString())}">
+                        <option th:value="${hall.getId()}" th:text="'№ '+${hall.getId()}"
+                                selected></option></span>
+                    <span th:unless="${hallFilt.equals(hall.getId().toString())}">
+                        <option th:value="${hall.getId()}"
+                                th:text="'№ '+${hall.getId()}"></option></span>
+                </span>
+        </div>
+    </select>
+</form>
+
+<div th:each="date:${dates}">
+    <div class="container" style="margin-top: 2em"></div>
+    <div class="w3-container w3-white w3-round-large w3-padding"
+         style="width: 95%;margin: auto">
+        <div class="container" style="padding: 5px 10px 5px 10px"><h1 th:text="${date}"
+                                                                      style="font-weight: bold;font-size: xx-large"></h1>
+        </div>
+        <div th:each="hall:${halls}">
+            <div style="display:flex;flex-direction: row;width:100%;justify-content: normal;margin: auto;padding: 5px 0px 5px 0px">
+                <p th:text="'Зал №'+${hall.getId()}+'  ('+${hall.getPermission()}+'D)'" style="padding: 3px;margin-top: -0.5%;   text-align: center"></p>
+                <div>
+                    <div class="rectangle-hidden">
+                        <div class="rectangle-text" style="padding-left:0px; margin-top: -0.7%">8:00</div>
+                        <div class="rectangle-text" style="margin-top: -0.7%;margin-left: auto">0:00</div>
+                    </div>
+                    <div class="rectangle" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+                    <div class="rectangle-hidden"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container" style="margin-top: 2em"></div>
+<script>
+    document.ondragstart = function(event) {
+        event.dataTransfer.setData("Text", event.target.id);
+    };
+
+
+    document.ondragover = function(event) {
+        event.preventDefault();
+    };
+
+    document.ondrop = function(event) {
+        event.preventDefault();
+        if ( event.target.className == "droptarget" ) {
+            const data = event.dataTransfer.getData("Text");
+            event.target.appendChild(document.getElementById(data));
+        }
+    };
+    document.getElementById("dateFiltBox").addEventListener("change", ({target}) => target.form.submit());
+    document.getElementById("hallFiltBox").addEventListener("change", ({target}) => target.form.submit());
+</script>
+</body>
+</html>

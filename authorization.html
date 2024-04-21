@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+<div class="container" style="margin-top:120px">
+    <div class="w3-col s6" style="align-content: center">
+        <div style="margin-top: 4em"></div>
+        <div class="w3-container w3-white w3-round-large w3-padding w3-center" style="width: 70%;align-self: center;margin: auto">
+            <h2 style="font-weight: bolder; margin-bottom: 1em">Авторизация</h2>
+            <form action="/authorization/authorize" method="post">
+                <input type="text" name="login" placeholder="Логин" th:value="${getLogin==null}?'':${getLogin}" class="form-control" style="margin-bottom: 0.7em; width: 100%; height: 2.5em"><br>
+                <p th:text="${emptyLog}" style="color: crimson;font-size: 1em;align-self: auto"/>
+                <input type="password" name="password" placeholder="Пароль" th:value="${getPassword==null}?'':${getPassword}"class="form-control" style="margin-bottom: 0.7em; width: 100%; height: 2.5em"><br>
+                <p th:text="${emptyPass}" style="color: crimson;font-size: 1em;align-self: auto"/>
+                <p th:text="${error}" style="color: crimson;font-size: 1em;align-self: auto"/>
+                <button type="submit" class="btn btn-success w3-round-large w3-hover-white w3-hover-text-black  w3-border-black w3-hover-border-black" style="background-color: black;text-align: center;color: white; height: 2.5em;width: 100%">Войти</button>
+            </form>
+        </div>
+    </div>
+    <div class="w3-col s6" >
+        <div class="w3-container" style="margin-left: 2em">
+            <h1 style="font-size: 7.5em;font-stretch: extra-condensed; font-weight: bold">CINESOFT</h1>
+            <h2 style="font-weight:normal ">Средство автоматизации управления контентом вашего кинотеатра</h2>
+        </div>
+    </div>
+</div>
+</body>
+</html>
