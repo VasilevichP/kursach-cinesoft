@@ -4,10 +4,11 @@
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:href="@{/main.css}" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" th:href="@{/w3.css}">
 </head>
 <body style="background-image: linear-gradient(120deg, #caa4e3, #f5ebb4);">
-<div class="container w3-black w3-padding" style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
+<div class="container w3-black w3-padding" style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;z-index: 100;"
+     id="heder">
     <div class="w3-bar">
         <a href="mainpage" class="w3-bar-item">
             <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75">
@@ -17,8 +18,20 @@
         </a>
     </div>
 </div>
+<div th:each="movie:${movies}">
+    <div th:id="'m'+${movie.getId()}" th:name="${movie.getName()}"></div>
+</div>
+<form action="/schedule/delete" method="post" id="delForm" style="display: none">
+    <input id="sesToDel" name="sesToDel">
+</form>
 <div class="container" style="margin-top: 9em"></div>
-<form action="/schedule/filter" method="post"
+<form action="/schedule/generateReport"  style="display:flex;flex-direction: row;width:95%;justify-content: left;margin: auto">
+    <button type="submit"
+            class="btn btn-success w3-round-large w3-hover-white w3-hover-text-black  w3-border-black w3-hover-border-black"
+            style="background-color: black;text-align: center;color: white; height: 2.5em; margin-bottom: 1em">Скачать отчет за неделю
+    </button>
+</form>
+<form action="/schedule/filter" method="post" id="toPasteAfter"
       style="display:flex;flex-direction: row;width:95%;justify-content: left;margin: auto">
     <select name="dateFiltBox" id="dateFiltBox"
             style="background-color: black;text-align: center;color: white;border: transparent 2px;margin-right: 0.4em;cursor:pointer; height: 2.5em;width: 15%">
@@ -26,12 +39,12 @@
             <option th:text="'Все дни'" value="" selected></option></span>
         <span th:unless="${dateFilt==null}">
             <option th:text="'Все дни:'" value=""></option></span>
-            <div th:each="date:${allDates}">
+        <div th:each="date:${allDates}">
                 <span th:if="${dateFilt==null}">
                     <option th:value="${date}"
                             th:text="${date}"></option>
                 </span>
-                <span th:if="${dateFilt!=null}">
+            <span th:if="${dateFilt!=null}">
                     <span th:if="${dateFilt.equals(date.toString())}">
                         <option th:value="${date}" th:text="${date}"
                                 selected></option></span>
@@ -39,7 +52,7 @@
                         <option th:value="${date}"
                                 th:text="${date}"></option></span>
                 </span>
-            </div>
+        </div>
     </select>
     <select name="hallFiltBox" id="hallFiltBox"
             style="background-color: black;text-align: center;color: white;border: transparent 2px;margin-right: 0.4em;cursor:pointer; height: 2.5em;width: 15%">
@@ -64,23 +77,76 @@
     </select>
 </form>
 
-<div th:each="date:${dates}">
+<span th:if="${success!=null}">
     <div class="container" style="margin-top: 2em"></div>
-    <div class="w3-container w3-white w3-round-large w3-padding"
-         style="width: 95%;margin: auto">
-        <div class="container" style="padding: 5px 10px 5px 10px"><h1 th:text="${date}"
-                                                                      style="font-weight: bold;font-size: xx-large"></h1>
+    <div class="w3-container w3-white w3-round-large center"
+         style="width: 50%;padding:0;text-align:center;color:green;margin: auto" >
+        <p th:text="${success}" style="color: #04a904"></p></div>
+</span>
+
+<div type="container" style="padding: 5px">
+    <form action="/schedule/edit" method="post" class="container w3-round-large w3-black w3-padding" id="inputForm"
+          style="display: none;flex-direction:column;width:25%;justify-content: center;margin: auto;margin-bottom: 2em;">
+        <label for="sesNumber">Номер сеанса:</label>
+        <input id="sesNumber" name="sesNumber"
+               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly>
+
+        <label for="sesHall">Зал:</label>
+        <select id="sesHall" name="sesHall" style="background-color: white;color: black;margin-bottom: 0.5em" onchange="change(event)"></select>
+        <label for="sesDate">Дата показа:</label>
+        <input type="date" name="sesDate" id="sesDate" label="Дата показа" th:min="${dates.size()>1?dates[1]:dates[0]}" onchange="change(event)"
+               th:max="${dates.size()>1?dates[dates.size()-1]:dates[0]}" th:value="${dates.size()>1?dates[1]:dates[0]}"
+               style="margin-bottom: 0.5em" required>
+        <label for="sesStartTime">Время начала показа:</label>
+        <input type="time" name="sesStartTime" id="sesStartTime" min="08:00" max="22:00" value="08:00"
+               onchange="change(event)" style="margin-bottom: 0.5em" required>
+        <label for="sesEndTime">Время конца показа:</label>
+        <input name="sesEndTime" id="sesEndTime"
+               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly required>
+        <p id="error" style="display: none;color: #ff3131"></p>
+        <div type="container" style="display: flex;flex-direction: row">
+            <button class="btn btn-success w3-round-large w3-hover-black w3-hover-text-white w3-right w3-border-black w3-hover-border-black"
+                    style="background-color: white;text-align: center;color: black; height: 2.5em;width: 30%;margin-bottom: 0.5em;vertical-align:bottom" type="submit" form="delForm" onclick="return confirm('Вы точно хотите удалить выбранный сеанс?')"
+                    id="deleteButton">Удалить
+            </button>
+            <button type="submit" id="sesButton"
+                    class="btn btn-success w3-round-large w3-hover-black w3-hover-text-white w3-right w3-border-black w3-hover-border-black"
+                    style="background-color: white;text-align: center;color: black; height: 2.5em;width: 30%;margin-bottom: 0.5em;vertical-align:bottom"
+                    disabled>Изменить
+            </button>
+            <button id="cancelButton" type="button"
+                    class="w3-round-large w3-hover-white w3-hover-text-black w3-right w3-border-black w3-hover-border-black"
+                    onclick="hideForm(event)"
+                    style="background-color: black;text-align: center;color: white; height: 2.5em;width: 30%;margin-bottom: 0.5em;vertical-align:bottom">
+                Отмена
+            </button>
         </div>
-        <div th:each="hall:${halls}">
-            <div style="display:flex;flex-direction: row;width:100%;justify-content: normal;margin: auto;padding: 5px 0px 5px 0px">
-                <p th:text="'Зал №'+${hall.getId()}+'  ('+${hall.getPermission()}+'D)'" style="padding: 3px;margin-top: -0.5%;   text-align: center"></p>
-                <div>
-                    <div class="rectangle-hidden">
-                        <div class="rectangle-text" style="padding-left:0px; margin-top: -0.7%">8:00</div>
-                        <div class="rectangle-text" style="margin-top: -0.7%;margin-left: auto">0:00</div>
+    </form>
+</div>
+
+<div th:each="date:${dates}">
+    <div th:id="'parent'+${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}">
+        <div class="container" style="margin-top: 2em"></div>
+        <div class="w3-container w3-white w3-round-large w3-padding"
+             th:id="${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}"
+             style="width: 95%;margin: auto">
+            <div class="container" style="padding: 5px 10px 5px 10px">
+                <h1 th:text="${date}" style="font-weight: bold;font-size: xx-large"></h1>
+            </div>
+            <div th:each="hall:${halls}">
+                <div style="display:flex;flex-direction: row;width:100%;justify-content: normal;margin: auto;padding: 5px 0px 5px 0px">
+                    <p th:text="'Зал №'+${hall[0]}+'  ('+${hall[1]}+'D)'"
+                       style="padding: 3px;margin-top: -0.5%;   text-align: center"></p>
+                    <div>
+                        <div class="rectangle-hidden-static">
+                            <p class="rectangle-text" style=" margin-top: 0.3%">8:00</p>
+                            <p class="rectangle-text" style="margin-top: 0.3%;right: 0">0:00</p>
+                        </div>
+                        <div class="rectangle"
+                             th:id="${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}+''+${hall[0]}"></div>
+                        <div class="rectangle-hidden"
+                             th:id="'hid'+${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}+''+${hall[0]}"></div>
                     </div>
-                    <div class="rectangle" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
-                    <div class="rectangle-hidden"></div>
                 </div>
             </div>
         </div>
@@ -88,24 +154,180 @@
 </div>
 <div class="container" style="margin-top: 2em"></div>
 <script>
-    document.ondragstart = function(event) {
-        event.dataTransfer.setData("Text", event.target.id);
-    };
 
 
-    document.ondragover = function(event) {
-        event.preventDefault();
-    };
-
-    document.ondrop = function(event) {
-        event.preventDefault();
-        if ( event.target.className == "droptarget" ) {
-            const data = event.dataTransfer.getData("Text");
-            event.target.appendChild(document.getElementById(data));
-        }
-    };
     document.getElementById("dateFiltBox").addEventListener("change", ({target}) => target.form.submit());
     document.getElementById("hallFiltBox").addEventListener("change", ({target}) => target.form.submit());
+
+
+    var halls = [[${halls}]];
+    var sessions = [[${sessions}]];
+    var movies = [[${movs}]];
+    if (sessions.length != 0) {
+        for (var i = 0; i < sessions.length; i++) {
+            var sthours = sessions[i][5];
+            var stmins = sessions[i][6];
+            var endhours = sessions[i][7];
+            var endmins = sessions[i][8];
+            var movieID = sessions[i][9];
+            var startlen = (sthours * 60 + stmins - 480) * 90 / 960;
+            var endlen = (endhours * 60 + endmins - 480) * 90 / 960;
+            let session = document.createElement('div');
+            session.classList.add('rectangle-object');
+            session.id = "s" + String(sessions[i][0]);
+            session.style.width = (endlen - startlen) + "em";
+            var now = new Date();
+            var sesStart = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], sthours, stmins);
+            var sesEnd = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], endhours, endmins);
+            if (now > sesStart && now < sesEnd) session.style.backgroundColor = "#9b8001";
+            if (now > sesEnd) session.style.backgroundColor = "#168802";
+            var parId = String(sessions[i][2]) + '' + String(sessions[i][3]) + '' + String(sessions[i][4]) + '' + String(sessions[i][1])
+            document.getElementById(parId).appendChild(session);
+            session.style.left = startlen + "em";
+            session.addEventListener("click", edit);
+            session.draggable = true;
+            var mname = document.getElementById(String("m" + movieID)).getAttribute('name');
+            let mn = document.createElement('p');
+            mn.innerHTML = mname;
+            mn.id = "p" + String(sessions[i][0]);
+            mn.style.color = 'white';
+            mn.style.marginBlock = "0";
+            mn.style.paddingLeft = "0.4em";
+            session.setAttribute('name', mname);
+            session.appendChild(mn);
+            let stt = document.createElement('p');
+            let endt = document.createElement('p');
+            stt.classList.add('rectangle-text');
+            endt.classList.add('rectangle-text');
+            stt.innerHTML = String(sthours) + ":" + (stmins < 10 ? "0" + String(stmins) : String(stmins));
+            endt.innerHTML = String(endhours) + ":" + (endmins < 10 ? "0" + String(endmins) : String(endmins));
+            var hidPar = document.getElementById("hid" + parId);
+            hidPar.appendChild(stt);
+            hidPar.appendChild(endt);
+            stt.style.left = startlen + "em";
+            endt.style.left = endlen - 2.5 + "em";
+            stt.style.zIndex = document.getElementById("heder").style.zIndex;
+            endt.style.zIndex = document.getElementById("heder").style.zIndex;
+            document.getElementById("heder").style.zIndex = session.style.zIndex + 1;
+        }
+    }
+
+    function edit() {
+        var parameters;
+        for (var i = 0; i < sessions.length; i++) {
+            if (event.target.id.slice(1) == sessions[i][0]) parameters = sessions[i];
+        }
+        let form = document.getElementById("inputForm");
+        form.style.display = "flex";
+        var daCoId=String(parameters[2]) + String(parameters[3]) + String(parameters[4]);
+        let dateContainer = document.getElementById(daCoId);
+        document.getElementById("parent"+daCoId).insertBefore(form, dateContainer);
+        let session = document.getElementById("s" + event.target.id.slice(1));
+        document.getElementById("sesNumber").value = parameters[0];
+        var initHour = +parameters[5];
+        initHour = initHour < 10 ? "0" + String(initHour) : String(initHour);
+        var initMinute = +parameters[6];
+        initMinute = initMinute < 10 ? "0" + String(initMinute) : String(initMinute);
+        var endHour = +parameters[7];
+        endHour = endHour < 10 ? "0" + String(endHour) : String(endHour);
+        var endMinute = +parameters[8];
+        endMinute = endMinute < 10 ? "0" + String(endMinute) : String(endMinute);
+        var year = String(parameters[2]);
+        var month = +parameters[3];
+        month = month < 10 ? "0" + String(month) : String(month);
+        var day = +parameters[4];
+        day = day < 10 ? "0" + String(day) : String(day);
+        document.getElementById("sesDate").value = year + "-" + month + "-" + day;
+        document.getElementById("sesStartTime").value = initHour + ":" + initMinute;
+        document.getElementById("sesEndTime").value = endHour + ":" + endMinute;
+        document.getElementById("sesToDel").value= String(parameters[0]);
+        const select = document.getElementById("sesHall");
+        for (var i = select.options.length - 1; i >= 0; i--) select.options.remove(i);
+        var movId = parameters[9];
+        var movPerm;
+        for (var i = 0; i < movies.length; i++) {
+            if (movies[i][0] == movId) {
+                movPerm = movies[i][2];
+                break;
+            }
+        }
+        for (var i = 0; i < halls.length; i++) {
+            if (halls[i][1] == movPerm) select.options[select.options.length] = new Option(halls[i][0], halls[i][0]);
+        }
+        for (var i = select.options.length - 1; i >= 0; i--) {
+            if (select.options[i].value==parameters[1]) select.options[i].selected=true;
+        }
+        form.scrollIntoView({block: "center", behavior: "smooth"});
+    }
+
+    function hideForm(event) {
+        document.getElementById("inputForm").style.display = "none";
+    }
+
+    function change(event) {
+        var stTime = document.getElementById("sesStartTime").value;
+        var hours = +stTime.slice(0, 2);
+        var minutes = +stTime.slice(3);
+        var sel = document.getElementById("sesHall");
+        var hall = sel.options[sel.selectedIndex].value;
+        var sesNum = document.getElementById("sesNumber").value;
+        var parameters;
+        for (var i = 0; i < sessions.length; i++) {
+            if (sesNum == sessions[i][0]) parameters = sessions[i];
+        }
+        var movLen;
+        var movAge;
+        for (var i = 0; i < movies.length; i++) {
+            if (movies[i][0] == parameters[9]) {
+                movLen = movies[i][1] + 20;
+                movAge = movies[i][3];
+                break;
+            }
+        }
+        var date = document.getElementById("sesDate").value;
+        var year = +date.slice(0, 4);
+        var month = +date.slice(5, 7);
+        var day = +date.slice(8, 10);
+        var edate = new Date(year, month - 1, day, hours, minutes, 0, 0);
+        var sdate = new Date(year, month - 1, day, hours, minutes, 0, 0);
+        var shours = sdate.getHours();
+        var smins = sdate.getMinutes();
+        edate.setMinutes(edate.getMinutes() + movLen);
+        var ehours = edate.getHours();
+        var emins = edate.getMinutes();
+        if (movAge == 18 && hours < 20) errActions("Фильмы 18+ не могут начинаться раньше 20:00");
+        else {
+            if (edate.getDate() == day) {
+                var overlap = false;
+                for (var i = 0; i < sessions.length; i++) {
+
+                    var otherStart = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], sessions[i][5], sessions[i][6]);
+                    var otherEnd = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], sessions[i][7], sessions[i][8]);
+                    if ((parameters[0]!=sessions[i][0])&&(hall == sessions[i][1]) && ((edate > otherStart && edate < otherEnd) || (sdate > otherStart && sdate < otherEnd))) {
+                        overlap = true;
+                        break;
+                    }
+                }
+                if (overlap) {
+                    errActions("В это время уже проводится сеанс");
+                } else {
+                    document.getElementById("error").style.display = "none";
+                    document.getElementById("sesEndTime").value = (ehours < 10 ? "0" + ehours : ehours) + ":" + (emins < 10 ? "0" + emins : emins);
+                    document.getElementById("sesButton").disabled = false;
+                }
+            } else {
+                errActions("Слишком позднее время сеанса");
+            }
+        }
+    }
+    function errActions(let) {
+        const err = document.getElementById("error");
+        document.getElementById("sesEndTime").value = "";
+        err.style.display = "block";
+        err.innerHTML = let;
+        document.getElementById("sesButton").disabled = true;
+    }
+
 </script>
 </body>
 </html>

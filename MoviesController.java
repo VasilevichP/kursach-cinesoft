@@ -104,18 +104,31 @@ public class MoviesController {
 
     @GetMapping("/films/{id:\\d+}")
     public String toDetails(@PathVariable(value = "id") long id, Model model, HttpSession session) {
-        Movie movie = movieService.getMovie(id);
-        model.addAttribute("movie", movie);
-        model.addAttribute("genres", movieService.findGenres(id));
-        return "movie_details";
+        try {
+            Movie movie = movieService.getMovie(id);
+            model.addAttribute("movie", movie);
+            model.addAttribute("genres", movieService.findGenres(id));
+            return "movie_details";
+        }
+        catch (Exception e){
+            return get(model, session);
+        }
+
     }
 
     @GetMapping("/movie_details/delete/{id:\\d+}")
     public String delete(@PathVariable(value = "id") long id, Model model, HttpSession session) {
-        String movie = movieService.getMovie(id).getName();
-        movieService.deleteMovie(id);
-        model.addAttribute("deletedMovie", movie);
-        return get(model, session);
+        try {
+            String movie = movieService.getMovie(id).getName();
+            movieService.deleteMovie(id);
+            model.addAttribute("deletedMovie", movie);
+        }
+        catch (Exception e){
+
+        }
+        finally {
+            return get(model, session);
+        }
     }
 
     @GetMapping("/films/toFilms")

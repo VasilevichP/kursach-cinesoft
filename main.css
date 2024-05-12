@@ -159,23 +159,34 @@ p {
 
 .rectangle {
     display:flex;flex-direction: row;width:100%;justify-content: normal;
+    position: relative;
     width: 90em;
     height: 50px;
     border: 1px solid #000000;
 }
 .rectangle-hidden{
+    position: relative;
+    display:flex;flex-direction: row;width:100%;justify-content: normal;
+    width: 90em;
+    height: 10px;
+}
+.rectangle-hidden-static{
+    position: relative;
     display:flex;flex-direction: row;width:100%;justify-content: normal;
     width: 90em;
     height: 10px;
 }
 .rectangle-object{
+    position: absolute;
     height: 50px;
-    color: black;
+    background-color: black;
 }
 .rectangle-text{
+    top:-1em;
     height: 10px;
     color: black;
     font-size: math;
+    position: absolute;
 }
 .dropobject{
 

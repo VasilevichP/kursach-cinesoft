@@ -71,12 +71,19 @@ public class AccountsController {
     @GetMapping("/accounts/delete/{login}")
     public String delete(@PathVariable(value = "login") String login, Model model, HttpSession session) {
         System.out.println("login to delete:" + login);
-        if (accountService.getAcc(login).getRole() == 1) model.addAttribute("delAdmin", login);
-        else {
-            accountService.deleteAccountByLogin(login);
-            model.addAttribute("deleted", login);
+        try {
+            if (accountService.getAcc(login).getRole() == 1) model.addAttribute("delAdmin", login);
+            else {
+                accountService.deleteAccountByLogin(login);
+                model.addAttribute("deleted", login);
+            }
         }
-        return get(model, session);
+        catch (Exception e){
+
+        }
+        finally {
+            return get(model, session);
+        }
     }
 
     @GetMapping({"/accounts/mainpage","/accounts/delete/mainpage"})

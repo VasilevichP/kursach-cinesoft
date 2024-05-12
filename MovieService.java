@@ -45,7 +45,12 @@ public class MovieService {
     }
 
     public void deleteMovie(Long id) {
-        movieRepository.deleteById(id);
+        try {
+            movieRepository.deleteById(id);
+        }
+        catch (Exception e){
+
+        }
     }
 
     public Iterable<Movie> getAllMovies() {
@@ -53,7 +58,7 @@ public class MovieService {
         return movies;
     }
 
-    public Movie getMovie(Long id) {
+    public Movie getMovie(Long id) throws Exception{
         Optional<Movie> optMovie = movieRepository.findById(id);
         return optMovie.get();
     }
@@ -110,18 +115,11 @@ public class MovieService {
         return searched;
     }
 
-    public void deleteOneExpired(Movie movie, LocalDate localDate) {
-        if (!movie.getDate_of_return().isAfter(localDate)) movieRepository.delete(movie);
-    }
-
     public void deleteAllExpired(LocalDate localDate) {
         Iterable<Movie> movies = movieRepository.findAll();
         for (Movie movie : movies) if (!movie.getDate_of_return().isAfter(localDate)) movieRepository.delete(movie);
     }
 
-    public boolean checkOneExpired(Movie movie, LocalDate localDate) {
-        return movie.getDate_of_return().isAfter(localDate);
-    }
 
     public Iterable<Movie> sort(Iterable<Movie> allMovies, String sort) {
         ArrayList<Movie> movies = (ArrayList<Movie>) StreamSupport.stream(allMovies.spliterator(), false)

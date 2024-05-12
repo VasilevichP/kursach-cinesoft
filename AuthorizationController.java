@@ -25,7 +25,7 @@ public class AuthorizationController {
 
     @GetMapping("/authorization")
     public String authorization(Model model, HttpSession session) {
-        if(!accountService.doesAdminExist()) return "first_admin";
+        if (!accountService.doesAdminExist()) return "first_admin";
         session.removeAttribute("user");
 //        model.addAttribute("us_check",session.getAttribute("user"));
         return "authorization";
@@ -54,7 +54,8 @@ public class AuthorizationController {
                     break;
                 case 0:
                     if (accountService.addAccountToDB(adm_login, adm_password, 1)) {
-                        model.addAttribute("success", "Пользователь был добавлен в базу данных");return "redirect:/authorization";
+                        model.addAttribute("success", "Пользователь был добавлен в базу данных");
+                        return "redirect:/authorization";
                     } else model.addAttribute("error", "Возникла ошибка при добавлении учетной записи в базу данных");
                     break;
             }
@@ -66,27 +67,35 @@ public class AuthorizationController {
     public String authorize(@RequestParam String login, @RequestParam String password, Model model, RedirectAttributes redirectAttributes, HttpSession session) {
         if (login == "") model.addAttribute("emptyLog", "Введите логин");
         else {
-            if (password == "") {model.addAttribute("emptyPass", "Введите пароль");
-                model.addAttribute("getLogin", login);}
-            else {
-                if (!accountService.findAccByLogin(login)) {model.addAttribute("error", "Неправильный логин или пароль");
+            if (password == "") {
+                model.addAttribute("emptyPass", "Введите пароль");
+                model.addAttribute("getLogin", login);
+            } else {
+                if (!accountService.findAccByLogin(login)) {
+                    model.addAttribute("error", "Неправильный логин или пароль");
                     model.addAttribute("getLogin", login);
-                    model.addAttribute("getPassword", password);}
-                else {
-                    Account acc = accountService.getAcc(login);
-                    if (!accountService.checkPassword(password, acc)){
-                        model.addAttribute("error", "Неправильный логин или пароль");
-                        model.addAttribute("getLogin", login);
-                        model.addAttribute("getPassword", password);}
-                    else {
-                        if (acc.getRole() == 1) {
-                            session.setAttribute("user", "admin");
-                            redirectAttributes.addFlashAttribute("user", "admin");
+                    model.addAttribute("getPassword", password);
+                } else {
+                    try {
+                        Account acc = accountService.getAcc(login);
+                        if (!accountService.checkPassword(password, acc)) {
+                            model.addAttribute("error", "Неправильный логин или пароль");
+                            model.addAttribute("getLogin", login);
+                            model.addAttribute("getPassword", password);
                         } else {
-                            session.setAttribute("user", "user");
-                            redirectAttributes.addFlashAttribute("user", "user");
+                            if (acc.getRole() == 1) {
+                                session.setAttribute("user", "admin");
+                                redirectAttributes.addFlashAttribute("user", "admin");
+                            } else {
+                                session.setAttribute("user", "user");
+                                redirectAttributes.addFlashAttribute("user", "user");
+                            }
+                            return "redirect:/mainpage";
                         }
-                        return "redirect:/mainpage";
+
+                    }
+                    catch (Exception e){
+
                     }
                 }
             }

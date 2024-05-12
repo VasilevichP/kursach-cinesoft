@@ -4,11 +4,11 @@
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link th:href="@{/main.css}" rel="stylesheet">
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" th:href="@{/w3.css}">
 </head>
 <body style="background-image: linear-gradient(120deg, #e89df3, #9eaaef);">
-<div class="container w3-black w3-padding"
-     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
+<div class="container w3-black w3-padding" id="heder"
+     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;z-index: 100;">
     <div class="w3-bar">
         <a href="mainpage" class="w3-bar-item">
             <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75">
@@ -21,30 +21,43 @@
 <div id="floatTip"></div>
 <div class="container" style="margin-top: 20.7em"></div>
 <span th:if="${success!=null}">
-    <div class="container" style="margin-top: 2em"></div>
-    <div class="w3-container w3-white w3-round-large center"
-         style="width: 50%;padding:10px 10px;text-align:center;margin: auto" th:text="${success}"></div>
+    <div class="container" style="margin-top: 2em" ></div>
+    <div class="w3-container w3-white w3-round-large center" id="succCont"
+         style="width: 50%;padding:0;text-align:center;margin: auto;">
+        <p th:text="${success}" style="color: #04a904"></p></div>
 </span>
-<div class="scrolling-wrapper" style="position: fixed;top:7.7em;left: 0;width: 100%;margin-bottom: 5em" id="scrWrpr">
+<span th:if="${createError!=null}">
+    <div class="container" style="margin-top: 2em" ></div>
+    <div class="w3-container w3-white w3-round-large center" id="errCont"
+         style="width: 50%;padding:0;text-align:center;margin: auto">
+        <p th:text="${createError}" style="color: crimson"></p></div>
+</span>
+    </div>
+</span>
+<div class="scrolling-wrapper" style="position: fixed;top:7.7em;left: 0;width: 100%;margin-bottom: 5em;z-index: 100;" id="scrWrpr">
     <div th:each="movie:${movies}" class="card">
         <div class="card">
             <img class="dropobject" th:src="@{${movie.getPoster()}}" draggable="true" onclick="showForm(event)"
-                 onerror="this.src='/images/noimg.png'" th:width="80" th:onMouseOver="'toolTip(\'Номер фильма:'+${movie.getId()}+' <br>Формат: '+${movie.getPermission()}+'D<br>Возрастное ограничение:'+${movie.getAgeRating()}+'\')'"
+                 th:name="${movie.getName()}"
+                 onerror="this.src='/images/noimg.png'" th:width="80"
+                 th:onMouseOver="'toolTip(\'Номер фильма:'+${movie.getId()}+' <br>Формат: '+${movie.getPermission()}+'D<br>Возрастное ограничение:'+${movie.getAgeRating()}+'\')'"
                  onmouseout="hideToolTip()"
-                 style="margin-top: 2em" th:height="100" th:id="${movie.getId()}">
+                 style="margin-top: 2em" th:height="100" th:id="'m'+${movie.getId()}">
             <p th:text="${movie.getName()}" STYLE="color: white;line-height: 0.2em"></p>
             <p th:text="${movie.getMovieLength()}+' минут'" STYLE="color: white;line-height: 0.2em"></p>
-            <p th:text="${movie.getPermission()}+'D'" STYLE="color: white;line-height: 0.2em"></p>
         </div>
     </div>
 </div>
 
 <div type="container" style="padding: 5px">
     <form action="/session_creation/create" method="post" class="container w3-round-large w3-black w3-padding"
-          style="display: none;flex-direction:column;width:20%;justify-content: center;margin: auto;" id="inputForm">
+          style="display: none;flex-direction:column;width:25%;justify-content: center;margin: auto;" id="inputForm">
         <label for="sesMovie">Фильм:</label>
         <input id="sesMovie" name="sesMovie"
-               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em" readonly>
+               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly>
+        <label for="sesName">Название:</label>
+        <input id="sesName" name="sesName"
+               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly>
         <label for="sesHall">Зал:</label>
         <select id="sesHall" name="sesHall" style="background-color: white;color: black;margin-bottom: 0.5em"></select>
         <label for="sesDate">Дата показа:</label>
@@ -56,7 +69,7 @@
                onchange="changeTime(event)" style="margin-bottom: 0.5em" required>
         <label for="sesEndTime">Время конца показа:</label>
         <input name="sesEndTime" id="sesEndTime"
-               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em" readonly required>
+               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly required>
         <p id="error" style="display: none;color: #ff3131"></p>
         <div type="container" style="display: flex;flex-direction: row">
             <button type="submit" id="sesButton"
@@ -85,12 +98,14 @@
                 <p th:text="'Зал №'+${hall[0]}+'  ('+${hall[1]}+'D)'"
                    style="padding: 3px;margin-top: -0.5%;   text-align: center"></p>
                 <div>
-                    <div class="rectangle-hidden">
-                        <div class="rectangle-text" style="padding-left:0px; margin-top: -0.7%">8:00</div>
-                        <div class="rectangle-text" style="margin-top: -0.7%;margin-left: auto">0:00</div>
+                    <div class="rectangle-hidden-static">
+                        <div class="rectangle-text" style=" margin-top: 0.3%">8:00</div>
+                        <div class="rectangle-text" style="margin-top: 0.3%;right: 0">0:00</div>
                     </div>
-                    <div class="rectangle" th:id="${hall[0]}"></div>
-                    <div class="rectangle-hidden"></div>
+                    <div class="rectangle"
+                         th:id="${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}+''+${hall[0]}"></div>
+                    <div class="rectangle-hidden"
+                         th:id="'hid'+${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}+''+${hall[0]}"></div>
                 </div>
             </div>
         </div>
@@ -98,11 +113,93 @@
 </div>
 <div class="container" style="margin-top: 2em"></div>
 <script>
+    function moveTip(e) {
+        floatTipStyle = document.getElementById("floatTip").style;
+        w = 300;
+        if (document.all) {
+            x = event.clientX + document.body.scrollLeft;
+            y = event.clientY + document.body.scrollTop;
+        } else {
+            x = e.pageX;
+            y = e.pageY;
+        }
+        if ((x + w + 10) < document.body.clientWidth) {
+            floatTipStyle.left = x + 'px';
+        } else {
+            floatTipStyle.left = x - w + 'px';
+        }
+        floatTipStyle.top = y + 20 + 'px';
+        floatTipStyle.zIndex = document.getElementById("scrWrpr").style.zIndex + 1;
+    }
+
+    function toolTip(msg) {
+        floatTipStyle = document.getElementById("floatTip").style;
+        if (msg) {
+            document.getElementById("floatTip").innerHTML = msg;
+            floatTipStyle.display = "block";
+        } else {
+            floatTipStyle.display = "none";
+        }
+    }
+
+    function toolTip(msg) {
+        floatTipStyle = document.getElementById("floatTip").style;
+        if (msg) {
+            document.getElementById("floatTip").innerHTML = msg;
+            floatTipStyle.display = "block";
+        } else {
+            floatTipStyle.display = "none";
+        }
+    }
+
+    function hideToolTip() {
+        document.getElementById("floatTip").style.display = "none";
+    }
+
     var movies = [[${movs}]];
     var halls = [[${halls}]];
+    var sessions = [[${sessions}]];
+    if (sessions.length != 0) {
+        for (var i = 0; i < sessions.length; i++) {
+            var sthours = sessions[i][5];
+            var stmins = sessions[i][6];
+            var endhours = sessions[i][7];
+            var endmins = sessions[i][8];
+            var movieID = sessions[i][9];
+            var startlen = (sthours * 60 + stmins - 480) * 90 / 960;
+            var endlen = (endhours * 60 + endmins - 480) * 90 / 960;
+            let session = document.createElement('div');
+            session.classList.add('rectangle-object');
+            session.id = "s" + String(sessions[i][0]);
+            session.style.width = (endlen - startlen) + "em";
+            var parId = String(sessions[i][2]) + '' + String(sessions[i][3]) + '' + String(sessions[i][4]) + '' + String(sessions[i][1])
+            document.getElementById(parId).appendChild(session);
+            session.style.zIndex = document.getElementById("heder").style.zIndex;
+            session.style.left = startlen + "em";
+            var mname = document.getElementById(String("m"+movieID)).getAttribute('name');
+            let mn = document.createElement('p');mn.innerHTML=mname;
+            mn.style.color='white';mn.style.marginBlock="0";mn.style.paddingLeft="0.4em";
+            session.appendChild(mn);
+            let stt = document.createElement('p');
+            let endt = document.createElement('p');
+            stt.classList.add('rectangle-text');
+            endt.classList.add('rectangle-text');
+            stt.innerHTML = String(sthours) + ":" + (stmins < 10 ? "0" + String(stmins) : String(stmins));
+            endt.innerHTML = String(endhours) + ":" + (endmins < 10 ? "0" + String(endmins) : String(endmins));
+            var hidPar = document.getElementById("hid" + parId);
+            hidPar.appendChild(stt);
+            hidPar.appendChild(endt);
+            stt.style.left = startlen  + "em";
+            endt.style.left = endlen -2.5 + "em";
+            stt.style.zIndex = document.getElementById("scrWrpr").style.zIndex;
+            endt.style.zIndex = document.getElementById("scrWrpr").style.zIndex;
+            document.getElementById("scrWrpr").style.zIndex = session.style.zIndex + 1;
+            document.getElementById("heder").style.zIndex = session.style.zIndex + 1
+        }
+    }
     document.ondragstart = function (event) {
         event.dataTransfer.setData("Text", event.target.id);
-        event.target.style.height = "50px";
+        //event.target.style.height = "50px";
     };
 
 
@@ -126,21 +223,31 @@
     };
 
     function showForm() {
-            document.getElementById("inputForm").style.display = "flex";
-            var movId = event.target.id;
-            var movPerm;
-            for (var i = 0; i < movies.length; i++) {
-                if (movies[i][0] == movId) {
-                    movPerm = movies[i][2];
-                    break;
-                }
+        if(document.getElementById("succCont")!=null){
+            document.getElementById("succCont").remove();
+        }
+        if(document.getElementById("errCont")!=null){
+            document.getElementById("errCont").remove();
+        }
+        document.getElementById("inputForm").style.display = "flex";
+        document.getElementById("inputForm").scrollIntoView({block: "end", behavior: "smooth"});
+        var movId = +String(event.target.id).slice(1);
+        var movName = event.target.getAttribute('name');
+        console.log(movName);
+        var movPerm;
+        for (var i = 0; i < movies.length; i++) {
+            if (movies[i][0] == movId) {
+                movPerm = movies[i][2];
+                break;
             }
-            const select = document.getElementById("sesHall");
-            for (var i = select.options.length - 1; i >= 0; i--) select.options.remove(i);
-            document.getElementById("sesMovie").value = movId;
-            for (var i = 0; i < halls.length; i++) {
-                if (halls[i][1] == movPerm) select.options[document.getElementById("sesHall").options.length] = new Option(halls[i][0], halls[i][0]);
-            }
+        }
+        const select = document.getElementById("sesHall");
+        for (var i = select.options.length - 1; i >= 0; i--) select.options.remove(i);
+        document.getElementById("sesMovie").value = movId;
+        document.getElementById("sesName").value = movName;
+        for (var i = 0; i < halls.length; i++) {
+            if (halls[i][1] == movPerm) select.options[select.options.length] = new Option(halls[i][0], halls[i][0]);
+        }
     };
 
     function hideForm(event) {
@@ -166,15 +273,36 @@
         var month = +date.slice(5, 7);
         var day = +date.slice(8, 10);
         var edate = new Date(year, month - 1, day, hours, minutes, 0, 0);
+        var sdate = new Date(year, month - 1, day, hours, minutes, 0, 0);
+        var shours = sdate.getHours();
+        var smins = sdate.getMinutes();
         edate.setMinutes(edate.getMinutes() + movLen);
-        var nhours = edate.getHours();
-        var nmins = edate.getMinutes();
+        var ehours = edate.getHours();
+        var emins = edate.getMinutes();
         if (movAge == 18 && hours < 20) errActions("Фильмы 18+ не могут начинаться раньше 20:00");
         else {
             if (edate.getDate() == day) {
-                document.getElementById("error").style.display="none";
-                document.getElementById("sesEndTime").value = (nhours < 10 ? "0" + nhours : nhours) + ":" + (nmins < 10 ? "0" + nmins : nmins);
-                document.getElementById("sesButton").disabled = false;
+                if (hours<8) errActions("Слишком раннее время для сеанса");
+                else{
+                    var overlap = false;
+                    for (var i = 0; i < sessions.length; i++) {
+                        var sel = document.getElementById("sesHall");
+                        var otherStart = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], sessions[i][5], sessions[i][6]);
+                        var otherEnd = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], sessions[i][7], sessions[i][8]);
+                        if ((sel.options[sel.selectedIndex].value == sessions[i][1]) && ((edate > otherStart && edate < otherEnd) || (sdate > otherStart && sdate < otherEnd))) {
+                            overlap = true;
+                            break;
+                        }
+                    }
+                    if (overlap) {
+                        errActions("В это время уже проводится сеанс");
+                    } else {
+                        document.getElementById("error").style.display = "none";
+                        document.getElementById("sesEndTime").value = (ehours < 10 ? "0" + ehours : ehours) + ":" + (emins < 10 ? "0" + emins : emins);
+                        document.getElementById("sesButton").disabled = false;
+                    }
+                }
+
             } else {
                 errActions("Слишком позднее время сеанса");
             }
@@ -190,46 +318,7 @@
     }
 
     document.onmousemove = moveTip;
-    function moveTip(e) {
-        floatTipStyle = document.getElementById("floatTip").style;
-        w = 300;
-        if (document.all)  {
-            x = event.clientX + document.body.scrollLeft;
-            y = event.clientY + document.body.scrollTop;
-        } else   {
-            x = e.pageX;
-            y = e.pageY;
-        }
-        if ((x + w + 10) < document.body.clientWidth) {
-            floatTipStyle.left = x + 'px';
-        } else {
-            floatTipStyle.left = x - w + 'px';
-        }
-        floatTipStyle.top = y + 20 + 'px';
-        floatTipStyle.zIndex=document.getElementById("scrWrpr").style.zIndex+1;
-    }
 
-    function toolTip(msg) {
-        floatTipStyle = document.getElementById("floatTip").style;
-        if (msg) {
-            document.getElementById("floatTip").innerHTML = msg;
-            floatTipStyle.display = "block";
-        } else {
-            floatTipStyle.display = "none";
-        }
-    }
-    function toolTip(msg) {
-        floatTipStyle = document.getElementById("floatTip").style;
-        if (msg) {
-            document.getElementById("floatTip").innerHTML = msg;
-            floatTipStyle.display = "block";
-        } else {
-            floatTipStyle.display = "none";
-        }
-    }
-    function hideToolTip(){
-        document.getElementById("floatTip").style.display="none";
-    }
 </script>
 </body>
 </html>

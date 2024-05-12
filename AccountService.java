@@ -52,20 +52,12 @@ public class AccountService {
         else return true;
     }
 
-    public Iterable<Account> getAllAccs(){
-        Iterable<Account> accounts =accountsRepository.findAll();
-        return accounts;
-    }
     public boolean doesAdminExist() {
         return accountsRepository.existsByRole(1);
     }
-    public Account getAcc(String login){
+    public Account getAcc(String login) throws Exception{
         Optional<Account> optAcc = accountsRepository.findById(login);
         return optAcc.get();
-    }
-    public boolean isAcc(String login){
-        Optional<Account> optAcc = accountsRepository.findById(login);
-        return optAcc.isPresent();
     }
 
     public boolean checkPassword(String password,Account acc){
