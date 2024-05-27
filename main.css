@@ -22,10 +22,7 @@ h2 {
 
 h1 {
     font-family: sans-serif;
-    /*font-size: xxx-large;*/
     text-transform: uppercase;
-    /*color: aliceblue;*/
-    /*font-weight: lighter;*/
 }
 
 
@@ -33,85 +30,6 @@ p {
     font-family: sans-serif;
 }
 
-.snackbar {
-    visibility: hidden;
-    min-width: 250px;
-    margin-left: -125px;
-
-    color: #fff;
-    text-align: center;
-    border-radius: 2px;
-    padding: 16px;
-    position: fixed;
-    z-index: 1;
-    left: 50%;
-    bottom: 30px;
-    font-size: 17px;
-}
-
-.success {
-    background-color: #4caf50;
-}
-
-.error {
-    background-color: #ff3131;
-}
-
-.snackbar.show {
-    visibility: visible;
-    -webkit-animation: fadein 0.5s, fadeout 0.5s 1.5s;
-    animation: fadein 0.5s, fadeout 0.5s 1.5s;
-}
-
-.snackbar.sshow {
-    visibility: visible;
-    -webkit-animation: fadein 0.4s, fadeout 0.4s 0.7s;
-    animation: fadein 0.4s, fadeout 0.4s 0.7s;
-}
-
-@-webkit-keyframes fadein {
-    from {
-        bottom: 0;
-        opacity: 0;
-    }
-    to {
-        bottom: 30px;
-        opacity: 1;
-    }
-}
-
-@keyframes fadein {
-    from {
-        bottom: 0;
-        opacity: 0;
-    }
-    to {
-        bottom: 30px;
-        opacity: 1;
-    }
-}
-
-@-webkit-keyframes fadeout {
-    from {
-        bottom: 30px;
-        opacity: 1;
-    }
-    to {
-        bottom: 0;
-        opacity: 0;
-    }
-}
-
-@keyframes fadeout {
-    from {
-        bottom: 30px;
-        opacity: 1;
-    }
-    to {
-        bottom: 0;
-        opacity: 0;
-    }
-}
 .scroll-table-body {
     height: 200px;
     overflow-x: auto;
@@ -119,12 +37,17 @@ p {
     margin-bottom: 20px;
     background: white;
     border-bottom: 1px solid #000000;
+    @media (max-width: 1000px) {
+        height: 30em;
+    }
 }
+
 .scroll-table table {
-    width:100%;
+    width: 100%;
     table-layout: fixed;
     border: none;
 }
+
 .scroll-table thead th {
     font-weight: bold;
     font-size: 14px;
@@ -132,13 +55,20 @@ p {
     font-size: medium;
     color: white;
     padding: 7px 7px;
+    @media (max-width: 1000px) {
+        font-size: 22px;
+    }
 }
+
 .scroll-table tbody td {
     border-left: 1px solid #000000;
     border-right: 1px solid #000000;
     border-bottom: 1px solid #000000;
     border-top: 1px solid #000000;
     text-align: center;
+    @media (max-width: 1000px) {
+        font-size: 22px;
+    }
 }
 
 .scrolling-wrapper {
@@ -151,57 +81,74 @@ p {
 
     .card {
         display: inline-block;
-        padding:2px 2px 0 2px;
+        padding: 2px 2px 0 2px;
         text-align: center;
         margin-top: -1em;
     }
 }
 
 .rectangle {
-    display:flex;flex-direction: row;width:100%;justify-content: normal;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: normal;
     position: relative;
-    width: 90em;
     height: 50px;
     border: 1px solid #000000;
 }
-.rectangle-hidden{
+
+.rectangle-hidden {
     position: relative;
-    display:flex;flex-direction: row;width:100%;justify-content: normal;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: normal;
     width: 90em;
     height: 10px;
 }
-.rectangle-hidden-static{
+
+.rectangle-hidden-static {
     position: relative;
-    display:flex;flex-direction: row;width:100%;justify-content: normal;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: normal;
     width: 90em;
     height: 10px;
 }
-.rectangle-object{
+
+.rectangle-object {
     position: absolute;
     height: 50px;
     background-color: black;
 }
-.rectangle-text{
-    top:-1em;
+
+.rectangle-text {
+    top: -1em;
     height: 10px;
     color: black;
     font-size: math;
     position: absolute;
 }
-.dropobject{
+
+.dropobject {
 
 }
-.droptarget{
+
+.droptarget {
 
 }
+
 [data-tooltip] {
     position: relative;
 }
+
 [data-tooltip]::after {
     content: attr(data-tooltip);
     position: absolute;
     width: 300px;
-    left: 0; top: 0;
+    left: 0;
+    top: 0;
     background: #fffeff;
     color: #4f4f4f;
     padding: 0.2em;
@@ -210,14 +157,151 @@ p {
     opacity: 0;
     transition: 1s;
 }
+
 [data-tooltip]:hover::after {
     opacity: 1;
     top: 2em;
 }
+
 #floatTip {
     position: absolute;
-    width: 250px; display: none;
-    border: 1px solid #000; padding: 4px;
-    font-family: sans-serif; font-size: 9pt;
-    color: #444444; background: #ffffff;
+    width: 250px;
+    display: none;
+    border: 1px solid #000;
+    padding: 4px;
+    font-family: sans-serif;
+    font-size: 9pt;
+    color: #444444;
+    background: #ffffff;
+}
+
+.authflex {
+    display: flex;
+    flex-direction: row;
+    width: 95%;
+    justify-content: left;
+    margin: auto;
+    @media (max-width: 1000px) {
+        flex-direction: column;
+    }
+}
+
+#authwind {
+    width: 70%;
+    align-self: center;
+    margin: auto;
+    @media (max-width: 1000px) {
+        width: 75%;
+        margin: auto;
+        height: fit-content;
+    }
+}
+
+.authcomp {
+    width: 50%;
+    @media (max-width: 1000px) {
+        width: 100%;
+    }
+}
+
+.authinp {
+    margin-bottom: 0.7em;
+    width: 100%;
+    height: 2.5em;
+    @media (max-width: 1000px) {
+        margin-bottom: 0.7em;
+        width: 95%;
+        height: 2.8em;
+        border-block-color: black;
+        border-width: 3px;
+        font-size: 26px;
+    }
+}
+
+#h1auth, #h2auth {
+    @media (max-width: 1000px) {
+        display: none;
+    }
+}
+
+#authname {
+    font-weight: bolder;
+    margin-bottom: 1em;
+    @media (max-width: 1000px) {
+        font-weight: bolder;
+        margin-bottom: 0.5em;
+        font-size: 60px;
+    }
+}
+
+#authbut {
+    background-color: black;
+    text-align: center;
+    color: white;
+    height: 2.5em;
+    width: 100%;
+    @media (max-width: 1000px) {
+        height: 2.8em;
+        width: 95%;
+        margin-bottom: 1.2em;
+        font-size: 26px;
+        margin-top: 0.2em;
+    }
+}
+
+.authtext {
+    font-size: 1em;
+    @media (max-width: 1000px) {
+        font-size: 26px;
+    }
+}
+#logoImg{
+    width: 300px;
+    height: 75px;
+    @media (max-width: 1000px) {
+        width: 400px;
+        height: auto;
+    }
+}
+a{
+    text-decoration: none;
+}
+
+.mbCont {
+    margin-top: 7.7em;
+    @media (max-width: 1000px)  {
+        margin-top: 10.7em;
+    }
+}
+.tableCont{
+    margin-top: 2em;width: 55%;align-items: center;color:black;margin: auto;
+    @media (max-width: 1000px)  {
+        width: 95%;
+    }
+}
+.accAndhallWind{
+    width: 35%;align-self: center;margin: auto;
+    @media (max-width: 1000px)  {
+        width: 60%;
+    }
+}
+.addinp {
+    margin-bottom: 0.7em;
+    width: 100%;
+    height: 2.5em;
+    @media (max-width: 1000px) {
+        font-size: 23px;
+    }
+}
+.abut {
+    background-color: black;
+    text-align: center;
+    color: white;
+    height: 2.5em;
+    width: 100%;
+    @media (max-width: 1000px) {
+        margin-bottom: 1.2em;
+        font-size: 23px;
+        margin-top: 0.2em;
+    }
 }

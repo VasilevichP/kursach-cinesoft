@@ -166,16 +166,18 @@
             var endhours = sessions[i][7];
             var endmins = sessions[i][8];
             var movieID = sessions[i][9];
-            var startlen = (sthours * 60 + stmins - 480) * 90 / 960;
-            var endlen = (endhours * 60 + endmins - 480) * 90 / 960;
+            var startlen = (sthours * 60 + stmins - 480);
+            var endlen = (endhours * 60 + endmins - 480);
             let session = document.createElement('div');
             session.classList.add('rectangle-object');
             session.id = "s" + String(sessions[i][0]);
-            session.style.width = (endlen - startlen) + "em";
+            session.style.width = (endlen - startlen)/9.6 + "%";
             var parId = String(sessions[i][2]) + '' + String(sessions[i][3]) + '' + String(sessions[i][4]) + '' + String(sessions[i][1])
             document.getElementById(parId).appendChild(session);
             session.style.zIndex = document.getElementById("heder").style.zIndex;
             session.style.left = startlen + "em";
+            if (now > sesStart && now < sesEnd) session.style.backgroundColor = "#9b8001";
+            if (now > sesEnd) session.style.backgroundColor = "#168802";
             var mname = document.getElementById(String("m"+movieID)).getAttribute('name');
             let mn = document.createElement('p');mn.innerHTML=mname;
             mn.style.color='white';mn.style.marginBlock="0";mn.style.paddingLeft="0.4em";
@@ -189,38 +191,14 @@
             var hidPar = document.getElementById("hid" + parId);
             hidPar.appendChild(stt);
             hidPar.appendChild(endt);
-            stt.style.left = startlen  + "em";
-            endt.style.left = endlen -2.5 + "em";
+            stt.style.left = startlen/9.6 + "%";
+            endt.style.left = endlen/9.6-2.7 + "%";
             stt.style.zIndex = document.getElementById("scrWrpr").style.zIndex;
             endt.style.zIndex = document.getElementById("scrWrpr").style.zIndex;
             document.getElementById("scrWrpr").style.zIndex = session.style.zIndex + 1;
             document.getElementById("heder").style.zIndex = session.style.zIndex + 1
         }
     }
-    document.ondragstart = function (event) {
-        event.dataTransfer.setData("Text", event.target.id);
-        //event.target.style.height = "50px";
-    };
-
-
-    document.ondragover = function (event) {
-        event.preventDefault();
-    };
-
-    document.ondrop = function (event) {
-        event.preventDefault();
-        if (event.target.className == "rectangle") {
-            const data = event.dataTransfer.getData("Text");
-            event.target.appendChild(document.getElementById(data));
-        }
-    };
-    document.ondrop = function (event) {
-        event.preventDefault();
-        if (event.target.className == "rectangle") {
-            const data = event.dataTransfer.getData("Text");
-            event.target.appendChild(document.getElementById(data));
-        }
-    };
 
     function showForm() {
         if(document.getElementById("succCont")!=null){
@@ -245,6 +223,8 @@
         for (var i = select.options.length - 1; i >= 0; i--) select.options.remove(i);
         document.getElementById("sesMovie").value = movId;
         document.getElementById("sesName").value = movName;
+        document.getElementById("sesStartTime").value = "8:00";
+        document.getElementById("sesEndTime").value = "";
         for (var i = 0; i < halls.length; i++) {
             if (halls[i][1] == movPerm) select.options[select.options.length] = new Option(halls[i][0], halls[i][0]);
         }

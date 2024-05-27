@@ -1,6 +1,7 @@
 package com.example.Cinesoft.Services;
 
 import com.example.Cinesoft.Entities.Hall;
+import com.example.Cinesoft.Entities.Session;
 import com.example.Cinesoft.Repositories.HallRepository;
 import com.example.Cinesoft.Repositories.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,31 +26,37 @@ public class HallService {
         return halls;
     }
 
-    public void changeStatus(long id) {
-        try{
+    public boolean changeStatus(long id) {
+        try {
             Hall hall = getHall(id);
             if (hall.isStatus()) {
                 hall.setStatus(false);
-                sessionRepository.deleteAllByHall(id);
+                deleteSessionByHall(id);
             } else hall.setStatus(true);
             hallRepository.save(hall);
-        }
-        catch (Exception e){
-
-        }
-    }
-
-    public boolean deleteById(long id) {
-        try {
-            hallRepository.deleteById(id);
-            sessionRepository.deleteAllByHall(id);
             return true;
         } catch (Exception e) {
             return false;
         }
     }
 
-    public Hall getHall(Long id) throws Exception{
+    public boolean deleteById(long id) {
+        try {
+            hallRepository.deleteById(id);
+            deleteSessionByHall(id);
+            return true;
+        } catch (Exception e) {
+            System.out.println("exception");
+            return false;
+        }
+    }
+
+    public void deleteSessionByHall(long id) {
+        Iterable<Session> sessions = sessionRepository.findAllByHall(id);
+        for (Session s : sessions) if (s.getStatus() == 0) sessionRepository.deleteById(s.getId());
+    }
+
+    public Hall getHall(Long id) throws Exception {
         Optional<Hall> optHall = hallRepository.findById(id);
         return optHall.get();
     }

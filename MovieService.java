@@ -2,8 +2,10 @@ package com.example.Cinesoft.Services;
 
 import com.example.Cinesoft.Entities.Genres;
 import com.example.Cinesoft.Entities.Movie;
+import com.example.Cinesoft.Entities.Session;
 import com.example.Cinesoft.Repositories.GenresRepository;
 import com.example.Cinesoft.Repositories.MovieRepository;
+import com.example.Cinesoft.Repositories.SessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,11 +22,13 @@ import static com.example.Cinesoft.CinesoftApplication.context;
 public class MovieService {
     private final MovieRepository movieRepository;
     private final GenresRepository genresRepository;
+    private final SessionRepository sessionRepository;
 
     @Autowired
-    public MovieService(MovieRepository movieRepository, GenresRepository genresRepository) {
+    public MovieService(MovieRepository movieRepository, GenresRepository genresRepository, SessionRepository sessionRepository) {
         this.movieRepository = movieRepository;
         this.genresRepository = genresRepository;
+        this.sessionRepository = sessionRepository;
     }
 
     public Movie getMovie(String title) {
@@ -47,10 +51,14 @@ public class MovieService {
     public void deleteMovie(Long id) {
         try {
             movieRepository.deleteById(id);
+            deleteSessionByMovie(id);
+        } catch (Exception e) {
         }
-        catch (Exception e){
+    }
 
-        }
+    public void deleteSessionByMovie(long id) {
+        Iterable<Session> sessions = sessionRepository.findAllByMovie(id);
+        for (Session s:sessions) if (s.getStatus()==0) sessionRepository.deleteById(s.getId());
     }
 
     public Iterable<Movie> getAllMovies() {
@@ -58,7 +66,7 @@ public class MovieService {
         return movies;
     }
 
-    public Movie getMovie(Long id) throws Exception{
+    public Movie getMovie(Long id) throws Exception {
         Optional<Movie> optMovie = movieRepository.findById(id);
         return optMovie.get();
     }

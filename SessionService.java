@@ -7,6 +7,7 @@ import com.itextpdf.text.*;
 import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -86,7 +87,7 @@ public class SessionService {
         System.out.println("fh: "+allSessions);
         return allSessions;
     }
-    public File generateCheckFile() throws Exception {
+    public File generateReport() throws Exception {
         LocalDate startDate = LocalDate.now().minusDays(8);
         LocalDate endDate = LocalDate.now().minusDays(1);
         String fileName = "report_(" + startDate +"-"+endDate + ").pdf";
@@ -96,15 +97,17 @@ public class SessionService {
         document.open();
         BaseFont baseFont = BaseFont.createFont("./src/reports/Arial Cyr/Arial Cyr.ttf", BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Font font = new Font(baseFont,12);
-        Paragraph paragraph = new Paragraph("CINESOFT REPORT");
+        Font titleFont = new Font(baseFont,18,Font.BOLD);
+        Paragraph paragraph = new Paragraph("CINESOFT REPORT",titleFont);
         paragraph.setAlignment(1);
+        paragraph.setSpacingBefore(200);
         document.add(paragraph);
         for(int i=8;i>0;i--){
             LocalDate date = LocalDate.now().minusDays(i);
+            document.newPage();
+            document.add(new Paragraph(date.toString(),titleFont));
             document.add(new Paragraph("\n-----------------------------------------------------\n-----------------------------------------------------\n"));
-            document.add(new Paragraph(date.toString()));
             ArrayList<Session> sess = (ArrayList<Session>) sessionRepository.findAllByDate(date);
-            System.out.println(sess);
             document.add(new Paragraph("Общее количество сеансов: "+ sess.size(),font));
             int allMoviesShown = (int) sess.stream().filter(distinctByKey(Session::getMovie)).count();
             int allHallsUsed = (int) sess.stream().filter(distinctByKey(Session::getHall)).count();

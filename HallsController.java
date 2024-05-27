@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Controller
@@ -35,35 +36,44 @@ public class HallsController {
     }
 
     @PostMapping("/halls/add")
-    public String addHall(@RequestParam String perm, @RequestParam int places, Model model, HttpSession session) {
-        System.out.println("perm: "+perm);int permission = Integer.parseInt(perm);
-        System.out.println("places: "+places);
-        Hall hall = new Hall(permission,true,places);
-        hallService.addHallToDB(hall);
-        model.addAttribute("success","Созданный зал был добавлен в базу данных");
+    public String addHall(@RequestParam Optional<String> perm, @RequestParam int places, Model model, HttpSession session) {
+        System.out.println("perm: " + perm);
+        try {
+            int permission = Integer.parseInt(perm.get());
+            System.out.println("places: " + places);
+            Hall hall = new Hall(permission, true, places);
+            if (hallService.addHallToDB(hall)) {
+                model.addAttribute("success", "Созданный зал был добавлен в базу данных");
+            }
+        }
+        catch (Exception e){
+            model.addAttribute("error", "Выберите разрешение зала");
+        }
         return get(model, session);
     }
 
     @GetMapping("/halls/status/{id}")
     public String changeStatus(@PathVariable(value = "id") long id, Model model, HttpSession session) {
         System.out.println("hall id:" + id);
-        hallService.changeStatus(id);
-        model.addAttribute("changed",id);
+        if (hallService.changeStatus(id))
+            model.addAttribute("changed", id);
         return get(model, session);
     }
+
     @GetMapping("/halls/delete/{id}")
     public String delete(@PathVariable(value = "id") long id, Model model, HttpSession session) {
         System.out.println("hall id:" + id);
-        hallService.deleteById(id);
-        model.addAttribute("success","Зал " +id+ " был удален из базы данных");
-        return get(model, session);
+            if (hallService.deleteById(id))
+                model.addAttribute("success", "Зал " + id + " был удален из базы данных");
+            return get(model, session);
     }
-    @GetMapping({"/halls/mainpage","/halls/status/mainpage","/halls/delete/mainpage"})
+
+    @GetMapping({"/halls/mainpage", "/halls/status/mainpage", "/halls/delete/mainpage"})
     public String toMainpage(Model model) {
         return "redirect:/mainpage";
     }
 
-    @GetMapping({"/halls/authorization","/halls/status/authorization","/halls/delete/authorization"})
+    @GetMapping({"/halls/authorization", "/halls/status/authorization", "/halls/delete/authorization"})
     public String toAuthorization(Model model) {
         return "redirect:/authorization";
     }

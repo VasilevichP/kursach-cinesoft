@@ -136,13 +136,13 @@
             <div th:each="hall:${halls}">
                 <div style="display:flex;flex-direction: row;width:100%;justify-content: normal;margin: auto;padding: 5px 0px 5px 0px">
                     <p th:text="'Зал №'+${hall[0]}+'  ('+${hall[1]}+'D)'"
-                       style="padding: 3px;margin-top: -0.5%;   text-align: center"></p>
+                       style="padding: 3px;margin-top: -0.5%;text-align: center"></p>
                     <div>
                         <div class="rectangle-hidden-static">
                             <p class="rectangle-text" style=" margin-top: 0.3%">8:00</p>
                             <p class="rectangle-text" style="margin-top: 0.3%;right: 0">0:00</p>
                         </div>
-                        <div class="rectangle"
+                        <div class="rectangle" style="width: 100%"
                              th:id="${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}+''+${hall[0]}"></div>
                         <div class="rectangle-hidden"
                              th:id="'hid'+${date.getYear()}+''+${date.getMonthValue()}+''+${date.getDayOfMonth()}+''+${hall[0]}"></div>
@@ -170,12 +170,12 @@
             var endhours = sessions[i][7];
             var endmins = sessions[i][8];
             var movieID = sessions[i][9];
-            var startlen = (sthours * 60 + stmins - 480) * 90 / 960;
-            var endlen = (endhours * 60 + endmins - 480) * 90 / 960;
+            var startlen = (sthours * 60 + stmins - 480);
+            var endlen = (endhours * 60 + endmins - 480);
             let session = document.createElement('div');
             session.classList.add('rectangle-object');
             session.id = "s" + String(sessions[i][0]);
-            session.style.width = (endlen - startlen) + "em";
+            session.style.width = (endlen - startlen)/9.6 + "%";
             var now = new Date();
             var sesStart = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], sthours, stmins);
             var sesEnd = new Date(sessions[i][2], sessions[i][3] - 1, sessions[i][4], endhours, endmins);
@@ -183,7 +183,7 @@
             if (now > sesEnd) session.style.backgroundColor = "#168802";
             var parId = String(sessions[i][2]) + '' + String(sessions[i][3]) + '' + String(sessions[i][4]) + '' + String(sessions[i][1])
             document.getElementById(parId).appendChild(session);
-            session.style.left = startlen + "em";
+            session.style.left = startlen/9.6 + "%";
             session.addEventListener("click", edit);
             session.draggable = true;
             var mname = document.getElementById(String("m" + movieID)).getAttribute('name');
@@ -204,8 +204,8 @@
             var hidPar = document.getElementById("hid" + parId);
             hidPar.appendChild(stt);
             hidPar.appendChild(endt);
-            stt.style.left = startlen + "em";
-            endt.style.left = endlen - 2.5 + "em";
+            stt.style.left = startlen/9.6 + "%";
+            endt.style.left = endlen/9.6-2.7 + "%";
             stt.style.zIndex = document.getElementById("heder").style.zIndex;
             endt.style.zIndex = document.getElementById("heder").style.zIndex;
             document.getElementById("heder").style.zIndex = session.style.zIndex + 1;

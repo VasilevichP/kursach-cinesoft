@@ -3,56 +3,150 @@
 <head>
     <title>Getting Started: Serving Web Content</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link th:href="@{/main.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/w3.css}">
 </head>
+<style>
+    h3 {
+        margin-right: 2em;
+        margin-top: 0.9em;
+        @media (max-width: 1000px) {
+            margin-right: 1em;
+            font-size: 35px;
+        }
+    }
+
+    .mbcont {
+        margin-top: 7.7em;
+        @media (max-width: 1000px) {
+            margin-top: 10.7em;
+        }
+    }
+
+    #searchCont {
+        width: 40%;
+        align-self: center;
+        margin: auto;
+        padding: 5px;
+        @media (max-width: 1000px) {
+            width: 95%;
+            padding: 3px;
+        }
+    }
+
+    .abtn {
+        background-color: black;
+        text-align: center;
+        color: white;
+        height: 2.5em;
+        width: 100%;
+        @media (max-width: 1000px) {
+            font-size: 23px;
+        }
+    }
+    .authflex {
+        display: flex;
+        flex-direction: row;
+        width: 95%;
+        justify-content: left;
+        margin: auto;
+        @media (max-width: 1000px) {
+            flex-direction: column;
+        }
+    }
+    #poster{
+        width: 400px;
+        height: 543px;
+        border-style: solid;
+        border-width: thin;
+    }
+    #postCont{
+        width: 35%;
+        @media (max-width: 1000px) {
+            width: 100%;
+        }
+    }
+    #descCont{
+        align-content: flex-start;
+        width: 65%;
+        @media (max-width: 1000px) {
+            width: 100%;
+        }
+    }
+    #warn{
+        margin: 1.5em 2.3em auto;
+    }
+    #warn2{
+        margin-bottom: 3em;
+    }
+    p{
+        @media (max-width: 1000px) {
+            font-size: 23px;
+        }
+    }
+</style>
 <body style="background-image: linear-gradient(90deg, #a4b6ff, #fff3d3)">
-<div class="container w3-black w3-padding" style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
+<div class="container w3-black w3-padding"
+     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
     <div class="w3-bar">
         <a href="mainpage" class="w3-bar-item">
-            <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75">
+            <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75" id="logoImg">
         </a>
         <a href="authorization" class="w3-bar-item w3-right btn w3-hover-text-grey">
             <h3 style="margin-right: 2em; margin-top: 0.9em">Выйти</h3>
         </a>
     </div>
 </div>
-<div class="container" style="margin-bottom: 8.5em"></div>
-<div class="container" style="margin-top: 2em"></div>
-    <div class="w3-container w3-white w3-round-large w3-padding w3-center"
-         style="width: 40%;align-self: center;margin: auto">
-        <form action="/film_request/get_film" method="post">
+<div class="container mbcont"></div>
+<div class="container"></div>
+<div class="w3-container w3-round-large w3-center" id="searchCont">
+    <form action="/film_request/get_film" method="post">
         <div class="w3-row">
             <div class="w3-col s10">
-                <input type="text" name="title" placeholder="Название фильма" class="form-control"
-                       style="margin-bottom: 0.7em; width: 100%; height: 2.5em">
+                <input type="text" name="title" placeholder="Название фильма" class="form-control addinp"
+                       style="margin-bottom: 0">
             </div>
             <div class="w3-col s2">
                 <button type="submit"
-                        class="btn btn-warning w3-round-large w3-hover-white w3-hover-text-black  w3-border-black w3-hover-border-black"
-                        style="background-color: black;text-align: center;color: white; height: 2.5em;width: 100%">Найти
+                        class="btn btn-warning w3-round-large w3-hover-white w3-hover-text-black  w3-border-black w3-hover-border-black abtn">
+                    Найти
                 </button>
             </div>
-        </div></form>
-        <p th:text="${error}" style="color: crimson;font-size: 1em;align-self: auto"/>
-        <p th:text="${success}" style="color: #04a904;font-size: 1em;align-self: auto"/>
-    </div>
+        </div>
+    </form>
+    <!--        <p th:text="${error}" style="color: crimson;font-size: 1em;align-self: auto"/>-->
+    <!--        <p th:text="${success}" style="color: #04a904;font-size: 1em;align-self: auto"/>-->
+</div>
+<span th:if="${success!=null}">
+    <div class="container" style="margin-top: 2em"></div>
+    <div class="w3-container w3-white w3-round-large center"
+         style="width: 50%;padding:0;text-align:center;margin: auto;">
+        <p class="authtext" th:text="${success}" style="color: #04a904"></p></div>
+</span>
+<span th:if="${error!=null}">
+    <div class="container" style="margin-top: 2em"></div>
+    <div class="w3-container w3-white w3-round-large center"
+         style="width: 50%;padding:0;text-align:center;margin: auto;">
+        <p class="authtext" th:text="${error}" style="color: crimson"></p></div>
+</span>
 <div class="container" style="margin-top: 2em"></div>
 
 <span th:if="${movie!=null}">
     <form action="/film_request/add" method="post">
-        <div class="w3-container w3-white w3-round-large w3-padding"
-             style="width: 85%;align-self: center;margin: auto">
-    <p th:text="${warning}" style="margin-left: 4em"/>
-        <div class="w3-col s5 w3-center"><img th:src="@{${movie.getPoster()}}" alt="poster"
-                                              onerror="this.src='/images/noimg.png'" th:width="400" class="w3-bordered"
-                                              style="border: black;margin-top: 2em"
-                                              th:height="450"></div>
-        <div class="w3-col s7 w3-left-align" style="align-content: flex-start">
+        <div class="authflex w3-round-large w3-white">
+            <div class="w3-container" id="postCont">
+                <p th:text="${warning}" id="warn"/>
+                <p style="text-align: center"><img th:src="@{${movie.getPoster()}}" alt="poster"
+                     onerror="this.src='/images/noimg.png'" id="poster"
+                     height="auto"></p>
+            </div>
+        <div class="w3-container" id="descCont">
+            <span th:if="${warning!=null}"><div style="margin-bottom: 3em" id="warn2"></div></span>
     <h1 th:text="${movie.getName()}"/>
     <p th:text="'Продолжительность фильма: '+${movie.getMovieLength()}+' минут'"></p>
     <p th:text="'Жанр: ' + ${genres}"></p>
     <p th:text="'Возрастное ограничение: '+${movie.getAgeRating()}+'+'"></p>
-    <div class="w3-row" >
+    <div class="w3-row">
     <div class="w3-col s3" style="vertical-align: center">
         <p>Разрешение фильма: </p>
     </div>
@@ -73,14 +167,14 @@
            style="margin-bottom: 0.7em; width: 30%; height: 2.5em">
             </div></div>
     <textarea th:text="${movie.getShortDescription()}" rows="9" readonly wrap="hard"
-              style="width: 95%;border: none;resize: none;outline: none"/>
-        </div>
-            <div type="container" style="width: 95%;">
+              style="width: 95%;border: none;resize: none;outline: none"/><div type="container" style="width: 95%;">
                 <button type="submit"
                         class="btn btn-success w3-round-large w3-hover-white w3-hover-text-black w3-right w3-border-black w3-hover-border-black"
                         style="background-color: black;text-align: center;color: white; height: 2.5em;width: 15%;margin-bottom: 2em;vertical-align:bottom">Добавить
         </button>
             </div>
+        </div>
+
     </div>
     </form>
    </span>

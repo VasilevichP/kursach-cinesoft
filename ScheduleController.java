@@ -236,7 +236,7 @@ public class ScheduleController {
     @RequestMapping(value = "/schedule/generateReport", method = {RequestMethod.GET, RequestMethod.POST})
     public ResponseEntity<byte[]> downloadFile(Model model) {
         try {
-            File pdfFile = sessionService.generateCheckFile();
+            File pdfFile = sessionService.generateReport();
             byte[] fileContent = Files.readAllBytes(pdfFile.toPath());
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
