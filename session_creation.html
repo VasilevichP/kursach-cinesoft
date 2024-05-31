@@ -6,43 +6,123 @@
     <link th:href="@{/main.css}" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/w3.css}">
 </head>
+<style>
+    h3 {
+        margin-right: 2em;
+        margin-top: 0.9em;
+        color: white;
+        font-size: 24px;
+        @media (max-width: 1000px) {
+            margin-right: 1em;
+            font-size: 35px;
+        }
+    }
+    h3:hover{
+        color: black;
+    }
+    .mbcont {
+        margin-top: 20.7em;
+        @media (max-width: 1000px) {
+            margin-top: 29.7em;
+        }
+    }
+    #scrWrpr{
+        position: fixed;top:7.7em;left: 0;width: 100%;margin-bottom: 5em;z-index: 100;
+        @media (max-width: 1000px) {
+            margin-top: 4em;
+        }
+    }
+    img{
+        width: 80px;
+        height: 100px;
+        margin-top: 2em;
+        @media (max-width: 1000px) {
+            height: 200px;
+            width: auto;
+        }
+    }
+    p{
+        font-size: 16px;
+        @media (max-width: 1000px) {
+            font-size: 24px;
+        }
+    }
+    select{
+        @media (max-width: 1000px) {
+            font-size: 23px;
+        }
+    }
+    .label{
+        @media (max-width: 1000px) {
+            font-size: 23px;
+        }
+    }
+    .dateTimeInp{
+        width: inherit;
+        @media (max-width: 1000px) {
+            font-size: 23px;
+        }
+    }
+    #inputForm{
+        display: none;flex-direction:column;width:25%;justify-content: center;margin: auto;color: #2d2d2d;
+        @media (max-width: 1000px) {
+            margin-top: 3em;
+            width: 50%;
+        }
+    }
+    .inp{
+        background-color: #2d2d2d;color: white;outline: none;margin-bottom: 0.5em;border: none;
+        @media (max-width: 1000px) {
+            font-size: 23px;
+        }
+    }
+    .abut {
+        text-align: center;height: 2.5em;width: 30%;margin-bottom: 0.5em;vertical-align:bottom;
+        @media (max-width: 1000px) {
+            font-size: 23px;
+        }
+    }
+    #succCont,#errCont{
+        width: 50%;padding:0;text-align:center;margin: auto;
+        @media (max-width: 1000px) {
+            margin-top: 2em;
+        }
+    }
+</style>
 <body style="background-image: linear-gradient(120deg, #e89df3, #9eaaef);">
-<div class="container w3-black w3-padding" id="heder"
-     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;z-index: 100;">
+<div class="container w3-padding" id="heder"
+     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;z-index: 100;background-color: #2d2d2d">
     <div class="w3-bar">
         <a href="mainpage" class="w3-bar-item">
-            <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75">
+            <img th:src="@{/images/logo.png}" alt="logo" id="logoImg" style="margin-top: 0">
         </a>
         <a href="authorization" class="w3-bar-item w3-right btn w3-hover-text-grey">
-            <h3 style="margin-right: 2em; margin-top: 0.9em">Выйти</h3>
+            <h3>Выйти</h3>
         </a>
     </div>
 </div>
 <div id="floatTip"></div>
-<div class="container" style="margin-top: 20.7em"></div>
+<div class="container mbcont"></div>
 <span th:if="${success!=null}">
     <div class="container" style="margin-top: 2em" ></div>
     <div class="w3-container w3-white w3-round-large center" id="succCont"
-         style="width: 50%;padding:0;text-align:center;margin: auto;">
+         style="">
         <p th:text="${success}" style="color: #04a904"></p></div>
 </span>
 <span th:if="${createError!=null}">
     <div class="container" style="margin-top: 2em" ></div>
-    <div class="w3-container w3-white w3-round-large center" id="errCont"
-         style="width: 50%;padding:0;text-align:center;margin: auto">
+    <div class="w3-container w3-white w3-round-large center" id="errCont">
         <p th:text="${createError}" style="color: crimson"></p></div>
 </span>
     </div>
 </span>
-<div class="scrolling-wrapper" style="position: fixed;top:7.7em;left: 0;width: 100%;margin-bottom: 5em;z-index: 100;" id="scrWrpr">
+<div class="scrolling-wrapper" id="scrWrpr">
     <div th:each="movie:${movies}" class="card">
         <div class="card">
             <img class="dropobject" th:src="@{${movie.getPoster()}}" draggable="true" onclick="showForm(event)"
-                 th:name="${movie.getName()}"
-                 onerror="this.src='/images/noimg.png'" th:width="80"
+                 th:name="${movie.getName()}" onerror="this.src='/images/noimg.png'"
                  th:onMouseOver="'toolTip(\'Номер фильма:'+${movie.getId()}+' <br>Формат: '+${movie.getPermission()}+'D<br>Возрастное ограничение:'+${movie.getAgeRating()}+'\')'"
-                 onmouseout="hideToolTip()"
-                 style="margin-top: 2em" th:height="100" th:id="'m'+${movie.getId()}">
+                 onmouseout="hideToolTip()" th:id="'m'+${movie.getId()}">
             <p th:text="${movie.getName()}" STYLE="color: white;line-height: 0.2em"></p>
             <p th:text="${movie.getMovieLength()}+' минут'" STYLE="color: white;line-height: 0.2em"></p>
         </div>
@@ -50,37 +130,35 @@
 </div>
 
 <div type="container" style="padding: 5px">
-    <form action="/session_creation/create" method="post" class="container w3-round-large w3-black w3-padding"
-          style="display: none;flex-direction:column;width:25%;justify-content: center;margin: auto;" id="inputForm">
-        <label for="sesMovie">Фильм:</label>
+    <form action="/session_creation/create" method="post" class="container w3-round-large w3-padding" id="inputForm">
+        <label class="label" for="sesMovie">Фильм:</label>
         <input id="sesMovie" name="sesMovie"
-               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly>
-        <label for="sesName">Название:</label>
+               class="inp" readonly>
+        <label class="label" for="sesName">Название:</label>
         <input id="sesName" name="sesName"
-               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly>
-        <label for="sesHall">Зал:</label>
-        <select id="sesHall" name="sesHall" style="background-color: white;color: black;margin-bottom: 0.5em"></select>
-        <label for="sesDate">Дата показа:</label>
-        <input type="date" name="sesDate" id="sesDate" label="Дата показа" th:min="${dates[1]}"
-               th:max="${dates[dates.size()-1]}" th:value="${dates[1]}"
-               style="margin-bottom: 0.5em" required>
-        <label for="sesStartTime">Время начала показа:</label>
-        <input type="time" name="sesStartTime" id="sesStartTime" min="08:00" max="22:00" value="08:00"
-               onchange="changeTime(event)" style="margin-bottom: 0.5em" required>
-        <label for="sesEndTime">Время конца показа:</label>
+               class="inp" readonly>
+        <label class="label" for="sesHall">Зал:</label>
+        <select id="sesHall" name="sesHall" style="background-color: white;color: #2d2d2d;margin-bottom: 0.5em"></select>
+        <label class="label" for="sesDate">Дата показа:</label>
+        <div class="w3-container" style="padding: 0;background-color: white;margin-bottom: 0.5em;width: 100%;">
+            <input type="date" class="dateTimeInp" name="sesDate" id="sesDate" label="Дата показа" th:min="${dates[1]}"
+               th:max="${dates[dates.size()-1]}" th:value="${dates[1]}" required></div>
+        <label class="label" for="sesStartTime">Время начала показа:</label>
+        <div class="w3-container" style="padding: 0;background-color: white;margin-bottom: 0.5em;width: 100%;">
+        <input type="time" class="dateTimeInp" name="sesStartTime" id="sesStartTime" min="08:00" max="22:00" value="08:00"
+               onchange="changeTime(event)" required></div>
+        <label class="label" for="sesEndTime">Время конца показа:</label>
         <input name="sesEndTime" id="sesEndTime"
-               style="background-color: black;color: white;outline: none;margin-bottom: 0.5em;border: none" readonly required>
+               class="inp" readonly required>
         <p id="error" style="display: none;color: #ff3131"></p>
         <div type="container" style="display: flex;flex-direction: row">
             <button type="submit" id="sesButton"
-                    class="btn btn-success w3-round-large w3-hover-black w3-hover-text-white w3-right w3-border-black w3-hover-border-black"
-                    style="background-color: white;text-align: center;color: black; height: 2.5em;width: 30%;margin-bottom: 0.5em;vertical-align:bottom"
+                    class="btn btn-success w3-round-large w3-hover-black w3-hover-text-white w3-right w3-border-black w3-hover-border-black abut"
                     disabled>Создать
             </button>
             <button id="cancelButton" type="button"
-                    class="w3-round-large w3-hover-white w3-hover-text-black w3-right w3-border-black w3-hover-border-black"
-                    onclick="hideForm(event)"
-                    style="background-color: black;text-align: center;color: white; height: 2.5em;width: 30%;margin-bottom: 0.5em;vertical-align:bottom">
+                    class="w3-round-large w3-hover-white w3-hover-text-black w3-right w3-border-black w3-hover-border-black abut"
+                    onclick="hideForm(event)">
                 Отмена
             </button>
         </div>
@@ -175,12 +253,15 @@
             var parId = String(sessions[i][2]) + '' + String(sessions[i][3]) + '' + String(sessions[i][4]) + '' + String(sessions[i][1])
             document.getElementById(parId).appendChild(session);
             session.style.zIndex = document.getElementById("heder").style.zIndex;
-            session.style.left = startlen + "em";
-            if (now > sesStart && now < sesEnd) session.style.backgroundColor = "#9b8001";
-            if (now > sesEnd) session.style.backgroundColor = "#168802";
+            session.style.left = startlen/9.6 + "%";
             var mname = document.getElementById(String("m"+movieID)).getAttribute('name');
             let mn = document.createElement('p');mn.innerHTML=mname;
             mn.style.color='white';mn.style.marginBlock="0";mn.style.paddingLeft="0.4em";
+            if (window.screen.width<1000){
+                mn.style.fontSize="17px";
+                mn.style.lineHeight="1";
+                mn.style.textOverflow="ellipsis";
+            }
             session.appendChild(mn);
             let stt = document.createElement('p');
             let endt = document.createElement('p');

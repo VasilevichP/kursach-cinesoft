@@ -17,12 +17,14 @@ h2 {
     font-family: sans-serif;
     font-size: 15em;
     text-transform: uppercase;
-    color: #000000;
+    color: #2d2d2d;
+
 }
 
 h1 {
     font-family: sans-serif;
     text-transform: uppercase;
+    color: #2d2d2d;
 }
 
 
@@ -36,7 +38,7 @@ p {
     margin-top: 0px;
     margin-bottom: 20px;
     background: white;
-    border-bottom: 1px solid #000000;
+    border-bottom: 1px solid #2d2d2d;
     @media (max-width: 1000px) {
         height: 30em;
     }
@@ -51,7 +53,7 @@ p {
 .scroll-table thead th {
     font-weight: bold;
     font-size: 14px;
-    background-color: black;
+    background-color: #2d2d2d;
     font-size: medium;
     color: white;
     padding: 7px 7px;
@@ -61,10 +63,10 @@ p {
 }
 
 .scroll-table tbody td {
-    border-left: 1px solid #000000;
-    border-right: 1px solid #000000;
-    border-bottom: 1px solid #000000;
-    border-top: 1px solid #000000;
+    border-left: 1px solid #2d2d2d;
+    border-right: 1px solid #2d2d2d;
+    border-bottom: 1px solid #2d2d2d;
+    border-top: 1px solid #2d2d2d;
     text-align: center;
     @media (max-width: 1000px) {
         font-size: 22px;
@@ -75,7 +77,7 @@ p {
     overflow-x: scroll;
     overflow-y: hidden;
     white-space: nowrap;
-    background: black;
+    background: #2d2d2d;
     padding: 1px;
     scrollbar-width: none;
 
@@ -90,11 +92,14 @@ p {
 .rectangle {
     display: flex;
     flex-direction: row;
-    width: 100%;
+    width: 90em;
     justify-content: normal;
     position: relative;
     height: 50px;
-    border: 1px solid #000000;
+    border: 1px solid #2d2d2d;
+    @media (max-width: 1000px) {
+        width: 55em;
+    }
 }
 
 .rectangle-hidden {
@@ -105,6 +110,9 @@ p {
     justify-content: normal;
     width: 90em;
     height: 10px;
+    @media (max-width: 1000px) {
+        width: 55em;
+    }
 }
 
 .rectangle-hidden-static {
@@ -115,28 +123,26 @@ p {
     justify-content: normal;
     width: 90em;
     height: 10px;
+    @media (max-width: 1000px) {
+        width: 55em;
+    }
 }
 
 .rectangle-object {
     position: absolute;
     height: 50px;
-    background-color: black;
+    background-color: #2d2d2d;
 }
 
 .rectangle-text {
     top: -1em;
     height: 10px;
-    color: black;
+    color: #2d2d2d;
     font-size: math;
     position: absolute;
-}
-
-.dropobject {
-
-}
-
-.droptarget {
-
+    @media (max-width: 1000px) {
+        font-size: 20px;
+    }
 }
 
 [data-tooltip] {
@@ -212,7 +218,7 @@ p {
         margin-bottom: 0.7em;
         width: 95%;
         height: 2.8em;
-        border-block-color: black;
+        border-block-color: #2d2d2d;
         border-width: 3px;
         font-size: 26px;
     }
@@ -235,7 +241,7 @@ p {
 }
 
 #authbut {
-    background-color: black;
+    background-color: #2d2d2d;
     text-align: center;
     color: white;
     height: 2.5em;
@@ -255,7 +261,8 @@ p {
         font-size: 26px;
     }
 }
-#logoImg{
+
+#logoImg {
     width: 300px;
     height: 75px;
     @media (max-width: 1000px) {
@@ -263,28 +270,38 @@ p {
         height: auto;
     }
 }
-a{
+
+a {
     text-decoration: none;
 }
 
 .mbCont {
     margin-top: 7.7em;
-    @media (max-width: 1000px)  {
+    @media (max-width: 1000px) {
         margin-top: 10.7em;
     }
 }
-.tableCont{
-    margin-top: 2em;width: 55%;align-items: center;color:black;margin: auto;
-    @media (max-width: 1000px)  {
+
+.tableCont {
+    margin-top: 2em;
+    width: 55%;
+    align-items: center;
+    color: #2d2d2d;
+    margin: auto;
+    @media (max-width: 1000px) {
         width: 95%;
     }
 }
-.accAndhallWind{
-    width: 35%;align-self: center;margin: auto;
-    @media (max-width: 1000px)  {
+
+.accAndhallWind {
+    width: 35%;
+    align-self: center;
+    margin: auto;
+    @media (max-width: 1000px) {
         width: 60%;
     }
 }
+
 .addinp {
     margin-bottom: 0.7em;
     width: 100%;
@@ -293,8 +310,9 @@ a{
         font-size: 23px;
     }
 }
+
 .abut {
-    background-color: black;
+    background-color: #2d2d2d;
     text-align: center;
     color: white;
     height: 2.5em;
@@ -303,5 +321,15 @@ a{
         margin-bottom: 1.2em;
         font-size: 23px;
         margin-top: 0.2em;
+    }
+}
+
+.succErrCont {
+    width: 50%;
+    padding: 0;
+    text-align: center;
+    margin: auto;
+    @media (max-width: 1000px) {
+        width: 70%;
     }
 }

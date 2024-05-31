@@ -16,10 +16,15 @@
     h3 {
         margin-right: 2em;
         margin-top: 0.9em;
+        color: white;
+        font-size: 24px;
         @media (max-width: 1000px) {
             margin-right: 1em;
             font-size: 35px;
         }
+    }
+    h3:hover{
+        color: black;
     }
 </style>
 <body style="background-image: linear-gradient(120deg,
@@ -27,8 +32,8 @@
     hsl(280,95%,85%),
     hsl(277,83%,68%),
     hsl(256,76%,72%));">
-<div class="container w3-black w3-padding"
-     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
+<div class="container w3-padding"
+     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;background-color: #2d2d2d">
     <div class="w3-bar">
         <a href="mainpage" class="w3-bar-item">
             <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75" id="logoImg">

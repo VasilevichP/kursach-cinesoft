@@ -10,10 +10,15 @@
     h3 {
         margin-right: 2em;
         margin-top: 0.9em;
+        color: white;
+        font-size: 24px;
         @media (max-width: 1000px) {
             margin-right: 1em;
             font-size: 35px;
         }
+    }
+    h3:hover{
+        color: black;
     }
 
     .mbcont {
@@ -30,12 +35,13 @@
         padding: 5px;
         @media (max-width: 1000px) {
             width: 95%;
-            padding: 3px;
+            padding: 2px;
+            background-color: white;
         }
     }
 
     .abtn {
-        background-color: black;
+        background-color: #2d2d2d;
         text-align: center;
         color: white;
         height: 2.5em;
@@ -56,7 +62,7 @@
     }
     #poster{
         width: 400px;
-        height: 543px;
+        height: 538px;
         border-style: solid;
         border-width: thin;
     }
@@ -71,6 +77,7 @@
         width: 65%;
         @media (max-width: 1000px) {
             width: 100%;
+            padding-left: 3em;
         }
     }
     #warn{
@@ -80,14 +87,50 @@
         margin-bottom: 3em;
     }
     p{
+        font-size: 16px;
+        @media (max-width: 1000px) {
+            font-size: 24px;
+        }
+    }
+    .inptext{
+        width: 20%;margin-top: 0.5em;
+        @media (max-width: 1000px) {
+            width: 30%;
+            margin-top: 0.3em;
+        }
+    }
+    .inp{
+        margin-bottom: 0.7em; width: 30%; height: 2.5em;
+        @media (max-width: 1000px) {
+            width: 35%;
+            height: 2em;
+            font-size: 23px;
+        }
+    }
+    textarea{
+        width: 95%;border: none;resize: none;outline: none;
         @media (max-width: 1000px) {
             font-size: 23px;
         }
     }
+    .abut {
+        background-color: #2d2d2d;text-align: center;color: white; height: 2.5em;width: 15%;margin-bottom: 1.8em;margin-right: 2.5em;
+        @media (max-width: 1000px) {
+            margin-bottom: 1.2em;
+            font-size: 23px;
+            margin-right: 2em;
+            width: 25%;
+        }
+    }
+    h1{
+        @media (max-width: 1000px) {
+            font-weight: 601;
+        }
+    }
 </style>
 <body style="background-image: linear-gradient(90deg, #a4b6ff, #fff3d3)">
-<div class="container w3-black w3-padding"
-     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;">
+<div class="container w3-padding"
+     style="align-content: flex-start;position: fixed;top: 0;left: 0;width: 100%;background-color: #2d2d2d">
     <div class="w3-bar">
         <a href="mainpage" class="w3-bar-item">
             <img th:src="@{/images/logo.png}" alt="logo" th:width="300" th:height="75" id="logoImg">
@@ -114,19 +157,15 @@
             </div>
         </div>
     </form>
-    <!--        <p th:text="${error}" style="color: crimson;font-size: 1em;align-self: auto"/>-->
-    <!--        <p th:text="${success}" style="color: #04a904;font-size: 1em;align-self: auto"/>-->
 </div>
 <span th:if="${success!=null}">
     <div class="container" style="margin-top: 2em"></div>
-    <div class="w3-container w3-white w3-round-large center"
-         style="width: 50%;padding:0;text-align:center;margin: auto;">
+    <div class="w3-container w3-white w3-round-large center succErrCont">
         <p class="authtext" th:text="${success}" style="color: #04a904"></p></div>
 </span>
 <span th:if="${error!=null}">
     <div class="container" style="margin-top: 2em"></div>
-    <div class="w3-container w3-white w3-round-large center"
-         style="width: 50%;padding:0;text-align:center;margin: auto;">
+    <div class="w3-container w3-white w3-round-large center succErrCont">
         <p class="authtext" th:text="${error}" style="color: crimson"></p></div>
 </span>
 <div class="container" style="margin-top: 2em"></div>
@@ -146,31 +185,22 @@
     <p th:text="'Продолжительность фильма: '+${movie.getMovieLength()}+' минут'"></p>
     <p th:text="'Жанр: ' + ${genres}"></p>
     <p th:text="'Возрастное ограничение: '+${movie.getAgeRating()}+'+'"></p>
-    <div class="w3-row">
-    <div class="w3-col s3" style="vertical-align: center">
-        <p>Разрешение фильма: </p>
-    </div>
-    <div class="w3-col s9">
-        <select name="perm" style="margin-bottom: 0.7em; width: 30%; height: 2.5em" required>
+    <div class="w3-container" style="display: flex;flex-direction: row;padding: 0">
+        <p class="inptext">Разрешение фильма: </p>
+        <select name="perm" class="inp" required>
             <option selected value="2">2D</option>
             <option value="3">3D</option>
             <option value="5">5D</option>
             <option value="7">7D</option>
-        </select>
-    </div></div>
-            <div class="w3-row" style="vertical-align: center">
-    <div class="w3-col s3">
-        <p>Срок проката (дни): </p>
-    </div>
-            <div class="w3-col s9">
+        </select></div>
+     <div class="w3-container" style="display: flex;flex-direction: row;padding: 0">
+        <p class="inptext">Срок проката (дни): </p>
     <input type="number" th:min="1" th:max="70" placeholder="Срок проката" name="rentalPeriod" required
-           style="margin-bottom: 0.7em; width: 30%; height: 2.5em">
-            </div></div>
-    <textarea th:text="${movie.getShortDescription()}" rows="9" readonly wrap="hard"
-              style="width: 95%;border: none;resize: none;outline: none"/><div type="container" style="width: 95%;">
+           class="inp" ></div>
+    <textarea th:text="${movie.getShortDescription()}" rows="9" readonly wrap="hard"/>
+            <div type="container">
                 <button type="submit"
-                        class="btn btn-success w3-round-large w3-hover-white w3-hover-text-black w3-right w3-border-black w3-hover-border-black"
-                        style="background-color: black;text-align: center;color: white; height: 2.5em;width: 15%;margin-bottom: 2em;vertical-align:bottom">Добавить
+                        class="btn btn-success w3-round-large w3-hover-white w3-hover-text-black w3-right w3-border-black w3-hover-border-black abut">Добавить
         </button>
             </div>
         </div>
